@@ -40,7 +40,7 @@
 TaskHandle_t adquirirProcesarECGTaskHandle = NULL;
 TaskHandle_t calcularParametrosECGTaskHandle = NULL;
 
-#define RETARDO_ECG 40000
+#define RETARDO_ECG 5000 //5 milisegundos
 
 #define CONFIG_BLINK_PERIOD 500
 #define LED_BT	            LED_1
@@ -76,27 +76,48 @@ static float f[BUFFER_SIZE/2];
 TaskHandle_t fft_task_handle = NULL;
 
 uint8_t datoConversionAD;
+
+bool BRADICARDIA = false;
+bool TAQUICARDIA = false;
+
+uint8_t limiteTaquicardia = 90;
+uint8_t limiteBradicardia = 60;
 /*==================[internal functions declaration]=========================*/
-
-
-static void adquirirProcesarECG(void *pvParameter){
-
-    while(true){
-    	ulTaskNotifyTake(pdTRUE, portMAX_DELAY);    
-        AnalogInputReadSingle(CH1, &datoConversionAD);
-        
-        UartSendString(UART_PC, ">ECG: ");
-		UartSendString(UART_PC, (char*)UartItoa(datoConversionAD, 10));
-		UartSendString(UART_PC, "\r\n");
-    }
-}
-
-static void calcularParametrosECG(void *pvParameter){
-}
 
 void funcTimerECG(void* param){
 	vTaskNotifyGiveFromISR(adquirirProcesarECGTaskHandle, pdFALSE);
 }
+
+static void adquirirProcesarECG(void *pvParameter){
+
+    while(true)
+    {
+    	ulTaskNotifyTake(pdTRUE, portMAX_DELAY);    
+        AnalogInputReadSingle(CH1, &datoConversionAD);
+        
+        // Aplicar filtros ? FFT task aplica los filtros antes de enviar el ecg y trabaja con un tamaño de señal definido.
+
+		UartSendString(UART_PC, (char*)UartItoa(datoConversionAD, 10));
+		UartSendString(UART_PC, "\r");
+
+        vTaskNotifyGiveFromISR(calcularParametrosECGTaskHandle, pdFALSE);
+    }
+}
+
+static void calcularParametrosECG(void *pvParameter){
+    while(true)
+    {
+        ulTaskNotifyTake(pdTRUE, portMAX_DELAY);    
+
+        // Cálculo de frecuencia cardíaca
+
+        // Comparación con taquicardia
+
+        // Comparación con bradicardia
+
+    }
+}
+
 
 
 /**
@@ -117,7 +138,7 @@ void read_data(uint8_t * data, uint8_t length){
  * por BLE.
  * 
  */
-static void FftTask(void *pvParameter){
+/*static void FftTask(void *pvParameter){
     char msg[48];
     while(true){
         ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
@@ -127,12 +148,13 @@ static void FftTask(void *pvParameter){
         FFTFrequency(SAMPLE_FREQ, BUFFER_SIZE, f);
         FFTMagnitude(ecg_filt, ecg_filt_fft, BUFFER_SIZE);
         for(int16_t i=0; i<BUFFER_SIZE/2; i++){
-            /* Formato de datos para que sean graficados en la aplicación móvil */
+            //Formato de datos para que sean graficados en la aplicación móvil 
             sprintf(msg, "*HX%2.2fY%2.2f,X%2.2fY%2.2f*\n", f[i], ecg_fft[i], f[i], ecg_filt_fft[i]);
             BleSendString(msg);
         }
     }
 }
+*/
 /*==================[external functions definition]==========================*/
 void app_main(void){
 
@@ -146,23 +168,31 @@ void app_main(void){
     };
 	TimerInit(&timerECG);
 
+    // Inicialización del Convertidor AD
+	analog_input_config_t convertidorAD = {
+		.input = CH1,
+		.mode = ADC_SINGLE,
+	};
+	AnalogInputInit(&convertidorAD);
+	AnalogOutputInit();
+
     xTaskCreate(&adquirirProcesarECG, "adquirirProcesarECG", 2048, NULL, 5, &adquirirProcesarECGTaskHandle);
     xTaskCreate(&calcularParametrosECG, "calcularParametrosECG", 2048, NULL, 5, &calcularParametrosECGTaskHandle);
 
-    ble_config_t ble_configuration = {
-        "ESP_EDU_1",
-        read_data
-    };
+    //ble_config_t ble_configuration = {
+      //  "ESP_EDU_1",
+        //read_data
+   // };
 
-    LedsInit();  
-    FFTInit();  
-    LowPassInit(SAMPLE_FREQ, 30, ORDER_2);
-    HiPassInit(SAMPLE_FREQ, 1, ORDER_2);
-    BleInit(&ble_configuration);
+   // LedsInit();  
+   // FFTInit();  
+    //LowPassInit(SAMPLE_FREQ, 30, ORDER_2);
+    //HiPassInit(SAMPLE_FREQ, 1, ORDER_2);
+   // BleInit(&ble_configuration);
 
-    xTaskCreate(&FftTask, "FFT", 2048, NULL, 5, &fft_task_handle);
+   // xTaskCreate(&FftTask, "FFT", 2048, NULL, 5, &fft_task_handle);
 
-    while(1){
+    /*while(1){
         vTaskDelay(CONFIG_BLINK_PERIOD / portTICK_PERIOD_MS);
         switch(BleStatus()){
             case BLE_OFF:
@@ -175,7 +205,7 @@ void app_main(void){
                 LedOn(LED_BT);
             break;
         }
-    }
+    }*/
     
     //Inicialización del puerto serie
 	serial_config_t myUart = {
