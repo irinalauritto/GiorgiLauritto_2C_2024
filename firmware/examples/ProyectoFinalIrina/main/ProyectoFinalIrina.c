@@ -59,7 +59,7 @@ uint8_t datoConversionAD;
 bool BRADICARDIA = false;
 bool TAQUICARDIA = false;
 
-uint8_t frecuenciaCardiaca;
+uint16_t frecuenciaCardiaca;
 
 // Limites en bpm
 uint8_t limiteTaquicardia = 90;
