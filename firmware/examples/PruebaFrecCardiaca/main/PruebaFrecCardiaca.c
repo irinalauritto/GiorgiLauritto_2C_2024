@@ -54,18 +54,18 @@ static float ecg_filt_fft[BUFFER_SIZE/2];
 static float f[BUFFER_SIZE/2];
 TaskHandle_t fft_task_handle = NULL;
 
-uint8_t datoConversionAD;
+uint16_t datoConversionAD;
 
 bool BRADICARDIA = false;
 bool TAQUICARDIA = false;
+bool PROCESANDO = false;
 
-uint16_t frecuenciaCardiaca;
+float frecuenciaCardiaca;
 
 // Limites en bpm
 uint8_t limiteTaquicardia = 90;
 uint8_t limiteBradicardia = 60;
 
-uint8_t i = 0;
 /*==================[internal functions declaration]=========================*/
 
 void funcTimerECG(void* param){
@@ -73,58 +73,74 @@ void funcTimerECG(void* param){
 }
 
 static void adquirirProcesarECG(void *pvParameter){
-
-    while(true)
+    uint16_t i = 0;
+    while(true) 
     {
-    	ulTaskNotifyTake(pdTRUE, portMAX_DELAY);    
+    	ulTaskNotifyTake(pdTRUE, portMAX_DELAY);  
+        if(PROCESANDO==false){
         AnalogInputReadSingle(CH1, &datoConversionAD);
         
 		UartSendString(UART_PC, (char*)UartItoa(datoConversionAD, 10));
 		UartSendString(UART_PC, "\r");
-        
+
         if(i<BUFFER_SIZE)
         {
             ecg[i] = datoConversionAD;
             i++;
+            printf("i:%d",i);
         }
-        else
+        if (i == BUFFER_SIZE)
+        {
+             printf("Hello world!\n");
+            vTaskNotifyGiveFromISR(calcularParametrosECGTaskHandle, pdFALSE);
+            
+        }
+         if(i>=BUFFER_SIZE)
         {
             i = 0;
             ecg[i] = datoConversionAD;
             i++;
         }
 
-        if(i == BUFFER_SIZE)
-        {
-            vTaskNotifyGiveFromISR(calcularParametrosECGTaskHandle, pdFALSE);
-        }
-
     }
+}
 }
 
 static void calcularParametrosECG(void *pvParameter){
     while(true)
     {
         ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
-
-        uint8_t umbralVoltaje = 200;  
+        PROCESANDO=true;
+        uint16_t umbralVoltaje = 200; 
+        uint16_t posicionAnteriorQRS = 0; 
+        float periodoCardiaco;
 
         // Cálculo de frecuencia cardíaca
         uint8_t contadorQRS = 0;
 
-        int j = 0;
-        while (j<BUFFER_SIZE)
+        uint16_t j=0;
+
+        while(j<BUFFER_SIZE)
         {
-            if(ecg[j]>umbralVoltaje && contadorQRS<2)
+
+            if(ecg[j]>umbralVoltaje)
             {
                 contadorQRS++;
-                j = j+50;
-            }
 
+                uint16_t deltaPosicion = j -posicionAnteriorQRS;
+                posicionAnteriorQRS = j;
+                periodoCardiaco = deltaPosicion*2.5/BUFFER_SIZE; // delta en tiempo
+                frecuenciaCardiaca = 1/(periodoCardiaco*60);
+                //printf("Hello world!\n");
+                printf("frec:%.2f\n", frecuenciaCardiaca);
+
+                j = j+50;
+                
+            }
+        j++;
         }
         
-        frecuenciaCardiaca = contadorQRS/BUFFER_SIZE; // ¿Como relacionar con el tiempo? cada 5miliseg 1 muestra. En 2,5 segundos se levanta el vector
-        frecuenciaCardiaca = frecuenciaCardiaca*((1/2.5)*60);
+        
 
         // Comparación con taquicardia
         if(frecuenciaCardiaca>limiteTaquicardia)
@@ -145,6 +161,8 @@ static void calcularParametrosECG(void *pvParameter){
             BRADICARDIA = false;
         }
     }
+
+    PROCESANDO=false;
 }
 
 
@@ -245,6 +263,10 @@ void app_main(void){
 
     // Inicialización del conteo de timers 
     TimerStart(timerECG.timer);
+
+    //Printf prueba
+    //printf("Hello world!\n");
+    //printf("%.2f\n", frecuenciaCardiaca);
 }
 
 /*==================[end of file]============================================*/
