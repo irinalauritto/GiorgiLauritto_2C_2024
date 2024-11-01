@@ -43,12 +43,14 @@
 #define BUFFER_SIZE         500
 #define SAMPLE_FREQ	        220
 #define RETARDO_ECG         5000 //5 milisegundos
+#define CHUNK               4 
+
 
 /*==================[internal data definition]===============================*/
 float ecg[BUFFER_SIZE];
-static float ecg_filt[BUFFER_SIZE];
-static float ecg_fft[BUFFER_SIZE/2];
-static float ecg_filt_fft[BUFFER_SIZE/2];
+//static float ecg_filt[BUFFER_SIZE];
+//static float ecg_fft[BUFFER_SIZE/2];
+//static float ecg_filt_fft[BUFFER_SIZE/2];
 static float f[BUFFER_SIZE/2];
 
 TaskHandle_t fft_task_handle = NULL;
@@ -63,13 +65,16 @@ bool TAQUICARDIA = false;
 
 bool PROCESANDO = false;
 
+bool filter = false;
+
 uint16_t frecuenciaCardiaca;
+
+static float ecg_filt[CHUNK];
 
 // Limites en bpm
 uint8_t limiteTaquicardia = 90;
 uint8_t limiteBradicardia = 60;
 
-uint8_t i = 0;
 /*==================[internal functions declaration]=========================*/
 
 void funcTimerECG(void* param){
@@ -77,6 +82,8 @@ void funcTimerECG(void* param){
 }
 
 static void adquirirProcesarECG(void *pvParameter){
+
+uint16_t i = 0;
 
     while(true)
     {
@@ -91,16 +98,12 @@ static void adquirirProcesarECG(void *pvParameter){
             ecg[i] = datoConversionAD;
             i++;
         }
-        else
-        {
-            i = 0;
-            ecg[i] = datoConversionAD;
-            i++;
-        }
-
         if(i == BUFFER_SIZE)
         {
             vTaskNotifyGiveFromISR(calcularParametrosECGTaskHandle, pdFALSE);
+            i = 0;
+            ecg[i] = datoConversionAD;
+            i++;
         }
 
     }
@@ -116,7 +119,7 @@ static void calcularParametrosECG(void *pvParameter){
         // Cálculo de frecuencia cardíaca
         uint8_t contadorQRS = 0;
 
-        int j = 0;
+        uint16_t j = 0;
         while (j<BUFFER_SIZE)
         {
             if(ecg[j]>umbralVoltaje && contadorQRS<2)
@@ -161,8 +164,13 @@ static void calcularParametrosECG(void *pvParameter){
  * @param length    Longitud del array de datos recibidos
  */
 void read_data(uint8_t * data, uint8_t length){
-	if(data[0] == 'R'){
-        xTaskNotifyGive(fft_task_handle);
+    switch(data[0]){
+        case 'A':
+            filter = true;
+            break;
+        case 'a':
+            filter = false;
+            break;
     }
 }
 
@@ -172,19 +180,25 @@ void read_data(uint8_t * data, uint8_t length){
  * 
  */
 static void FftTask(void *pvParameter){
-    char msg[48];
+    char msg[128];
+    char msg_chunk[24];
+    static uint8_t indice = 0;
     while(true){
         ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
-        FFTMagnitude(ecg, ecg_fft, BUFFER_SIZE);
-        HiPassFilter(ecg, ecg_filt, BUFFER_SIZE);
-        LowPassFilter(ecg_filt, ecg_filt, BUFFER_SIZE);
-        FFTFrequency(SAMPLE_FREQ, BUFFER_SIZE, f);
-        FFTMagnitude(ecg_filt, ecg_filt_fft, BUFFER_SIZE);
-        for(int16_t i=0; i<BUFFER_SIZE/2; i++){
-            //Formato de datos para que sean graficados en la aplicación móvil 
-            sprintf(msg, "*HX%2.2fY%2.2f,X%2.2fY%2.2f*\n", f[i], ecg_fft[i], f[i], ecg_filt_fft[i]);
-            BleSendString(msg);
+        if(filter){
+            HiPassFilter(&ecg[indice], ecg_filt, CHUNK);
+            LowPassFilter(ecg_filt, ecg_filt, CHUNK);
+        } else{
+            memcpy(ecg_filt, &ecg[indice], CHUNK*sizeof(float));
         }
+        strcpy(msg, "");
+        for(uint8_t i=0; i<CHUNK; i++){
+            sprintf(msg_chunk, "*G%.2f*", ecg_filt[i]);
+            strcat(msg, msg_chunk);
+        }
+        indice += CHUNK;
+
+        BleSendString(msg);
     }
 }
 
@@ -197,27 +211,13 @@ void app_main(void){
     };
 
     LedsInit();  
-    FFTInit();  
-    LowPassInit(SAMPLE_FREQ, 30, ORDER_2);
-    HiPassInit(SAMPLE_FREQ, 1, ORDER_2);
+    //FFTInit();  
+    //LowPassInit(SAMPLE_FREQ, 30, ORDER_2);
+    //HiPassInit(SAMPLE_FREQ, 1, ORDER_2);
     BleInit(&ble_configuration);
 
-    xTaskCreate(&FftTask, "FFT", 2048, NULL, 5, &fft_task_handle);
 
-    while(1){
-        vTaskDelay(CONFIG_BLINK_PERIOD / portTICK_PERIOD_MS);
-        switch(BleStatus()){
-            case BLE_OFF:
-                LedOff(LED_BT);
-            break;
-            case BLE_DISCONNECTED:
-                LedToggle(LED_BT);
-            break;
-            case BLE_CONNECTED:
-                LedOn(LED_BT);
-            break;
-        }
-    }
+
     timer_config_t timerECG = {
         .timer = TIMER_A,
         .period = RETARDO_ECG,
@@ -249,6 +249,22 @@ void app_main(void){
 
     // Inicialización del conteo de timers 
     TimerStart(timerECG.timer);
+
+    xTaskCreate(&FftTask, "FFT", 2048, NULL, 5, &fft_task_handle);
+    while(1){
+        vTaskDelay(CONFIG_BLINK_PERIOD / portTICK_PERIOD_MS);
+        switch(BleStatus()){
+            case BLE_OFF:
+                LedOff(LED_BT);
+            break;
+            case BLE_DISCONNECTED:
+                LedToggle(LED_BT);
+            break;
+            case BLE_CONNECTED:
+                LedOn(LED_BT);
+            break;
+        }
+    }
 }
 
 /*==================[end of file]============================================*/
