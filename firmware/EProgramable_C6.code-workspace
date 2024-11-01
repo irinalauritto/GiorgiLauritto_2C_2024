@@ -105,7 +105,8 @@
             "vumeter.h": "c",
             "rtc_mcu.h": "c",
             "fft.h": "c",
-            "i2c.h": "c"
+            "i2c.h": "c",
+            "esp_bt.h": "c"
         },
     },
     "tasks": {

@@ -29,6 +29,7 @@
 #include "neopixel_stripe.h"
 #include "ble_mcu.h"
 #include "delay_mcu.h"
+
 #include "timer_mcu.h"
 #include "uart_mcu.h"
 #include "analog_io_mcu.h"
@@ -37,27 +38,30 @@
 #include "fft.h"
 #include "iir_filter.h"
 /*==================[macros and definitions]=================================*/
-TaskHandle_t adquirirProcesarECGTaskHandle = NULL;
-TaskHandle_t calcularParametrosECGTaskHandle = NULL;
-
-#define RETARDO_ECG 5000 //5 milisegundos
-
 #define CONFIG_BLINK_PERIOD 500
 #define LED_BT	            LED_1
 #define BUFFER_SIZE         500
 #define SAMPLE_FREQ	        220
+#define RETARDO_ECG         5000 //5 milisegundos
+
 /*==================[internal data definition]===============================*/
 float ecg[BUFFER_SIZE];
 static float ecg_filt[BUFFER_SIZE];
 static float ecg_fft[BUFFER_SIZE/2];
 static float ecg_filt_fft[BUFFER_SIZE/2];
 static float f[BUFFER_SIZE/2];
-TaskHandle_t fft_task_handle = NULL;
 
-uint8_t datoConversionAD;
+TaskHandle_t fft_task_handle = NULL;
+TaskHandle_t adquirirProcesarECGTaskHandle = NULL;
+TaskHandle_t calcularParametrosECGTaskHandle = NULL;
+
+
+uint16_t datoConversionAD;
 
 bool BRADICARDIA = false;
 bool TAQUICARDIA = false;
+
+bool PROCESANDO = false;
 
 uint16_t frecuenciaCardiaca;
 
@@ -167,7 +171,7 @@ void read_data(uint8_t * data, uint8_t length){
  * por BLE.
  * 
  */
-/*static void FftTask(void *pvParameter){
+static void FftTask(void *pvParameter){
     char msg[48];
     while(true){
         ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
@@ -183,10 +187,37 @@ void read_data(uint8_t * data, uint8_t length){
         }
     }
 }
-*/
+
 /*==================[external functions definition]==========================*/
 void app_main(void){
 
+      ble_config_t ble_configuration = {
+        "ESP_EDU_IRI_JOSE",
+        read_data
+    };
+
+    LedsInit();  
+    FFTInit();  
+    LowPassInit(SAMPLE_FREQ, 30, ORDER_2);
+    HiPassInit(SAMPLE_FREQ, 1, ORDER_2);
+    BleInit(&ble_configuration);
+
+    xTaskCreate(&FftTask, "FFT", 2048, NULL, 5, &fft_task_handle);
+
+    while(1){
+        vTaskDelay(CONFIG_BLINK_PERIOD / portTICK_PERIOD_MS);
+        switch(BleStatus()){
+            case BLE_OFF:
+                LedOff(LED_BT);
+            break;
+            case BLE_DISCONNECTED:
+                LedToggle(LED_BT);
+            break;
+            case BLE_CONNECTED:
+                LedOn(LED_BT);
+            break;
+        }
+    }
     timer_config_t timerECG = {
         .timer = TIMER_A,
         .period = RETARDO_ECG,
@@ -206,34 +237,7 @@ void app_main(void){
     xTaskCreate(&adquirirProcesarECG, "adquirirProcesarECG", 2048, NULL, 5, &adquirirProcesarECGTaskHandle);
     xTaskCreate(&calcularParametrosECG, "calcularParametrosECG", 2048, NULL, 5, &calcularParametrosECGTaskHandle);
 
-    //ble_config_t ble_configuration = {
-      //  "ESP_EDU_1",
-        //read_data
-   // };
-
-   // LedsInit();  
-   // FFTInit();  
-    //LowPassInit(SAMPLE_FREQ, 30, ORDER_2);
-    //HiPassInit(SAMPLE_FREQ, 1, ORDER_2);
-   // BleInit(&ble_configuration);
-
-   // xTaskCreate(&FftTask, "FFT", 2048, NULL, 5, &fft_task_handle);
-
-    /*while(1){
-        vTaskDelay(CONFIG_BLINK_PERIOD / portTICK_PERIOD_MS);
-        switch(BleStatus()){
-            case BLE_OFF:
-                LedOff(LED_BT);
-            break;
-            case BLE_DISCONNECTED:
-                LedToggle(LED_BT);
-            break;
-            case BLE_CONNECTED:
-                LedOn(LED_BT);
-            break;
-        }
-    }*/
-    
+  
     //Inicialización del puerto serie
 	serial_config_t myUart = {
 		.port = UART_PC,
