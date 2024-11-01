@@ -2,10 +2,10 @@
  *
  * @section genDesc General Description
  *
- * Este proyecto ejemplifica el uso del módulo de comunicación 
- * Bluetooth Low Energy (BLE), junto con el de cálculo de la FFT 
+ * Este proyecto ejemplifica el uso del módulo de comunicación
+ * Bluetooth Low Energy (BLE), junto con el de cálculo de la FFT
  * de una señal.
- * Permite graficar en una aplicación móvil la FFT de una señal. 
+ * Permite graficar en una aplicación móvil la FFT de una señal.
  *
  * @section changelog Changelog
  *
@@ -33,25 +33,24 @@
 #include "uart_mcu.h"
 #include "analog_io_mcu.h"
 
-
 #include "fft.h"
 #include "iir_filter.h"
 /*==================[macros and definitions]=================================*/
 TaskHandle_t adquirirProcesarECGTaskHandle = NULL;
 TaskHandle_t calcularParametrosECGTaskHandle = NULL;
 
-#define RETARDO_ECG 5000 //5 milisegundos
+#define RETARDO_ECG 5000 // 5 milisegundos
 
 #define CONFIG_BLINK_PERIOD 500
-#define LED_BT	            LED_1
-#define BUFFER_SIZE         500
-#define SAMPLE_FREQ	        220
+#define LED_BT LED_1
+#define BUFFER_SIZE 500
+#define SAMPLE_FREQ 220
 /*==================[internal data definition]===============================*/
 float ecg[BUFFER_SIZE];
 static float ecg_filt[BUFFER_SIZE];
-static float ecg_fft[BUFFER_SIZE/2];
-static float ecg_filt_fft[BUFFER_SIZE/2];
-static float f[BUFFER_SIZE/2];
+static float ecg_fft[BUFFER_SIZE / 2];
+static float ecg_filt_fft[BUFFER_SIZE / 2];
+static float f[BUFFER_SIZE / 2];
 TaskHandle_t fft_task_handle = NULL;
 
 uint16_t datoConversionAD;
@@ -63,119 +62,125 @@ bool PROCESANDO = false;
 float frecuenciaCardiaca;
 
 // Limites en bpm
-uint8_t limiteTaquicardia = 90;
-uint8_t limiteBradicardia = 60;
+float limiteTaquicardia = 90;
+float limiteBradicardia = 59;
 
 /*==================[internal functions declaration]=========================*/
 
-void funcTimerECG(void* param){
-	vTaskNotifyGiveFromISR(adquirirProcesarECGTaskHandle, pdFALSE);
+void funcTimerECG(void *param)
+{
+    vTaskNotifyGiveFromISR(adquirirProcesarECGTaskHandle, pdFALSE);
 }
 
-static void adquirirProcesarECG(void *pvParameter){
+static void adquirirProcesarECG(void *pvParameter)
+{
     uint16_t i = 0;
-    while(true) 
-    {
-    	ulTaskNotifyTake(pdTRUE, portMAX_DELAY);  
-        if(PROCESANDO==false){
-        AnalogInputReadSingle(CH1, &datoConversionAD);
-        
-		UartSendString(UART_PC, (char*)UartItoa(datoConversionAD, 10));
-		UartSendString(UART_PC, "\r");
-
-        if(i<BUFFER_SIZE)
-        {
-            ecg[i] = datoConversionAD;
-            i++;
-            printf("i:%d",i);
-        }
-        if (i == BUFFER_SIZE)
-        {
-             printf("Hello world!\n");
-            vTaskNotifyGiveFromISR(calcularParametrosECGTaskHandle, pdFALSE);
-            
-        }
-         if(i>=BUFFER_SIZE)
-        {
-            i = 0;
-            ecg[i] = datoConversionAD;
-            i++;
-        }
-
-    }
-}
-}
-
-static void calcularParametrosECG(void *pvParameter){
-    while(true)
+    while (true)
     {
         ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
-        PROCESANDO=true;
-        uint16_t umbralVoltaje = 200; 
-        uint16_t posicionAnteriorQRS = 0; 
+        if (PROCESANDO == false)
+        {
+            AnalogInputReadSingle(CH1, &datoConversionAD);
+
+            UartSendString(UART_PC, (char *)UartItoa(datoConversionAD, 10));
+            UartSendString(UART_PC, "\r");
+
+            if (i < BUFFER_SIZE)
+            {
+                ecg[i] = datoConversionAD;
+                i++;
+            }
+            if (i == BUFFER_SIZE)
+            {
+                vTaskNotifyGiveFromISR(calcularParametrosECGTaskHandle, pdFALSE);
+                i = 0;
+                ecg[i] = datoConversionAD;
+                i++;
+            }
+        }
+    }
+}
+
+static void calcularParametrosECG(void *pvParameter)
+{
+    while (true)
+    {
+        ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+        PROCESANDO = true;
+        uint16_t umbralVoltaje = 350;
+        uint16_t posicionAnteriorQRS = 0;
         float periodoCardiaco;
 
         // Cálculo de frecuencia cardíaca
         uint8_t contadorQRS = 0;
 
-        uint16_t j=0;
+        uint16_t j = 0;
 
-        while(j<BUFFER_SIZE)
+        while (j < BUFFER_SIZE)
         {
-
-            if(ecg[j]>umbralVoltaje)
+            if (ecg[j] > umbralVoltaje)
             {
                 contadorQRS++;
-
-                uint16_t deltaPosicion = j -posicionAnteriorQRS;
+                printf("contador: %d\n", contadorQRS);
+                float frecuenciaAUX = frecuenciaCardiaca;
+                uint16_t deltaPosicion = j - posicionAnteriorQRS;
                 posicionAnteriorQRS = j;
-                periodoCardiaco = deltaPosicion*2.5/BUFFER_SIZE; // delta en tiempo
-                frecuenciaCardiaca = 1/(periodoCardiaco*60);
-                //printf("Hello world!\n");
-                printf("frec:%.2f\n", frecuenciaCardiaca);
+                periodoCardiaco = deltaPosicion * 2.5 / BUFFER_SIZE; // delta en tiempo
+                frecuenciaCardiaca = 1 / (periodoCardiaco/60);
 
-                j = j+50;
-                
+            if(contadorQRS==1){
+                    printf("frec:%.2f\n",frecuenciaAUX);
+                    frecuenciaCardiaca=frecuenciaAUX;
+                }
+            else{
+                    printf("frec:%.2f\n", frecuenciaCardiaca);
+                }
+          
+        
+            //Compara si tiene taquicardia o no:   
+             if (frecuenciaCardiaca > limiteTaquicardia)
+                {
+                    TAQUICARDIA = true;
+                    printf("Tiene taquicardia\n\n");
+                }
+                else
+                {
+                    TAQUICARDIA = false;
+                }
+                // Comparación con bradicardia
+            if (frecuenciaCardiaca < limiteBradicardia)
+                {
+                    BRADICARDIA = true;
+                    printf("Tiene bradicardia\n\n");
+                }
+            else
+                {
+                    BRADICARDIA = false;
+                }
+
+                j = j + 70;
             }
-        j++;
+            j++;
         }
         
+        PROCESANDO = false;
         
-
-        // Comparación con taquicardia
-        if(frecuenciaCardiaca>limiteTaquicardia)
-        {
-            TAQUICARDIA = true;
-        }
-        else
-        {
-            TAQUICARDIA = false;
-        }
-        // Comparación con bradicardia
-        if(frecuenciaCardiaca<limiteBradicardia)
-        {
-            BRADICARDIA = true;
-        }
-        else
-        {
-            BRADICARDIA = false;
-        }
+    
     }
 
-    PROCESANDO=false;
 }
 
-
-
 /**
- * @brief Función a ejecutarse ante un interrupción de recepción 
+ * @brief Función a ejecutarse ante un interrupción de recepción
  * a través de la conexión BLE.
- * 
+ *
  * @param data      Puntero a array de datos recibidos
  * @param length    Longitud del array de datos recibidos
  */
-void read_data(uint8_t * data, uint8_t length){
-	if(data[0] == 'R'){
+void read_data(uint8_t *data, uint8_t length)
+{
+    if (data[0] == 'R')
+    {
         xTaskNotifyGive(fft_task_handle);
     }
 }
@@ -183,7 +188,7 @@ void read_data(uint8_t * data, uint8_t length){
 /**
  * @brief Tarea para el cálculo de la FFT y el envío de datos
  * por BLE.
- * 
+ *
  */
 /*static void FftTask(void *pvParameter){
     char msg[48];
@@ -195,7 +200,7 @@ void read_data(uint8_t * data, uint8_t length){
         FFTFrequency(SAMPLE_FREQ, BUFFER_SIZE, f);
         FFTMagnitude(ecg_filt, ecg_filt_fft, BUFFER_SIZE);
         for(int16_t i=0; i<BUFFER_SIZE/2; i++){
-            //Formato de datos para que sean graficados en la aplicación móvil 
+            //Formato de datos para que sean graficados en la aplicación móvil
             sprintf(msg, "*HX%2.2fY%2.2f,X%2.2fY%2.2f*\n", f[i], ecg_fft[i], f[i], ecg_filt_fft[i]);
             BleSendString(msg);
         }
@@ -203,39 +208,39 @@ void read_data(uint8_t * data, uint8_t length){
 }
 */
 /*==================[external functions definition]==========================*/
-void app_main(void){
+void app_main(void)
+{
 
     timer_config_t timerECG = {
         .timer = TIMER_A,
         .period = RETARDO_ECG,
         .func_p = funcTimerECG,
-        .param_p = NULL
-    };
-	TimerInit(&timerECG);
+        .param_p = NULL};
+    TimerInit(&timerECG);
 
     // Inicialización del Convertidor AD
-	analog_input_config_t convertidorAD = {
-		.input = CH1,
-		.mode = ADC_SINGLE,
-	};
-	AnalogInputInit(&convertidorAD);
-	AnalogOutputInit();
+    analog_input_config_t convertidorAD = {
+        .input = CH1,
+        .mode = ADC_SINGLE,
+    };
+    AnalogInputInit(&convertidorAD);
+    AnalogOutputInit();
 
     xTaskCreate(&adquirirProcesarECG, "adquirirProcesarECG", 2048, NULL, 5, &adquirirProcesarECGTaskHandle);
     xTaskCreate(&calcularParametrosECG, "calcularParametrosECG", 2048, NULL, 5, &calcularParametrosECGTaskHandle);
 
-    //ble_config_t ble_configuration = {
-      //  "ESP_EDU_1",
-        //read_data
-   // };
+    // ble_config_t ble_configuration = {
+    //   "ESP_EDU_1",
+    // read_data
+    // };
 
-   // LedsInit();  
-   // FFTInit();  
-    //LowPassInit(SAMPLE_FREQ, 30, ORDER_2);
-    //HiPassInit(SAMPLE_FREQ, 1, ORDER_2);
-   // BleInit(&ble_configuration);
+    // LedsInit();
+    // FFTInit();
+    // LowPassInit(SAMPLE_FREQ, 30, ORDER_2);
+    // HiPassInit(SAMPLE_FREQ, 1, ORDER_2);
+    // BleInit(&ble_configuration);
 
-   // xTaskCreate(&FftTask, "FFT", 2048, NULL, 5, &fft_task_handle);
+    // xTaskCreate(&FftTask, "FFT", 2048, NULL, 5, &fft_task_handle);
 
     /*while(1){
         vTaskDelay(CONFIG_BLINK_PERIOD / portTICK_PERIOD_MS);
@@ -251,22 +256,22 @@ void app_main(void){
             break;
         }
     }*/
-    
-    //Inicialización del puerto serie
-	serial_config_t myUart = {
-		.port = UART_PC,
-		.baud_rate = 115200,
-		.func_p = NULL,
-		.param_p = NULL,
-	};
-	UartInit(&myUart);
 
-    // Inicialización del conteo de timers 
+    // Inicialización del puerto serie
+    serial_config_t myUart = {
+        .port = UART_PC,
+        .baud_rate = 115200,
+        .func_p = NULL,
+        .param_p = NULL,
+    };
+    UartInit(&myUart);
+
+    // Inicialización del conteo de timers
     TimerStart(timerECG.timer);
 
-    //Printf prueba
-    //printf("Hello world!\n");
-    //printf("%.2f\n", frecuenciaCardiaca);
+    // Printf prueba
+    // printf("Hello world!\n");
+    // printf("%.2f\n", frecuenciaCardiaca);
 }
 
 /*==================[end of file]============================================*/
