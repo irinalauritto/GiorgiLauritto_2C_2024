@@ -29,13 +29,9 @@
 #include "neopixel_stripe.h"
 #include "ble_mcu.h"
 #include "delay_mcu.h"
-
 #include "timer_mcu.h"
 #include "uart_mcu.h"
 #include "analog_io_mcu.h"
-
-
-#include "fft.h"
 #include "iir_filter.h"
 /*==================[macros and definitions]=================================*/
 #define CONFIG_BLINK_PERIOD 500
@@ -44,36 +40,30 @@
 #define SAMPLE_FREQ	        220
 #define RETARDO_ECG         5000 //5 milisegundos
 #define CHUNK               4 
-
-
+#define T_SENIAL            4000 
 /*==================[internal data definition]===============================*/
 float ecg[BUFFER_SIZE];
-//static float ecg_filt[BUFFER_SIZE];
-//static float ecg_fft[BUFFER_SIZE/2];
-//static float ecg_filt_fft[BUFFER_SIZE/2];
-static float f[BUFFER_SIZE/2];
 
-TaskHandle_t fft_task_handle = NULL;
+TaskHandle_t mostrarTaskHandle = NULL;
 TaskHandle_t adquirirProcesarECGTaskHandle = NULL;
 TaskHandle_t calcularParametrosECGTaskHandle = NULL;
-
 
 uint16_t datoConversionAD;
 
 bool BRADICARDIA = false;
 bool TAQUICARDIA = false;
-
 bool PROCESANDO = false;
+bool FRECUENCIA_NORMAL = false;
 
 bool filter = false;
 
-uint16_t frecuenciaCardiaca;
+float frecuenciaCardiaca;
 
 static float ecg_filt[CHUNK];
 
 // Limites en bpm
-uint8_t limiteTaquicardia = 90;
-uint8_t limiteBradicardia = 60;
+uint8_t limiteTaquicardia = 91;
+uint8_t limiteBradicardia = 59;
 
 /*==================[internal functions declaration]=========================*/
 
@@ -83,78 +73,112 @@ void funcTimerECG(void* param){
 
 static void adquirirProcesarECG(void *pvParameter){
 
-uint16_t i = 0;
-
-    while(true)
+ uint16_t i = 0;
+    while (true)
     {
-    	ulTaskNotifyTake(pdTRUE, portMAX_DELAY);    
-        AnalogInputReadSingle(CH1, &datoConversionAD);
-        
-		UartSendString(UART_PC, (char*)UartItoa(datoConversionAD, 10));
-		UartSendString(UART_PC, "\r");
-        
-        if(i<BUFFER_SIZE)
+        ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+        if (PROCESANDO == false)
         {
-            ecg[i] = datoConversionAD;
-            i++;
-        }
-        if(i == BUFFER_SIZE)
-        {
-            vTaskNotifyGiveFromISR(calcularParametrosECGTaskHandle, pdFALSE);
-            i = 0;
-            ecg[i] = datoConversionAD;
-            i++;
-        }
+            AnalogInputReadSingle(CH1, &datoConversionAD);
 
+            UartSendString(UART_PC, (char *)UartItoa(datoConversionAD, 10));
+            UartSendString(UART_PC, "\r");
+
+            if (i < BUFFER_SIZE)
+            {
+                ecg[i] = datoConversionAD;
+                i++;
+                //printf("i:%d\n",i);
+            }
+            if (i == BUFFER_SIZE)
+            {
+                vTaskNotifyGiveFromISR(calcularParametrosECGTaskHandle, pdFALSE);
+                i = 0;
+                ecg[i] = datoConversionAD;
+                i++;
+            }
+        }
     }
 }
 
 static void calcularParametrosECG(void *pvParameter){
-    while(true)
+    while (true)
     {
+        char frecuencia[128];
+        char frecCardiaca[128];
         ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
-
-        uint8_t umbralVoltaje = 200;  
+        PROCESANDO = true;
+        uint16_t umbralVoltaje = 350;
+        uint16_t posicionAnteriorQRS = 0;
+        float periodoCardiaco;
 
         // Cálculo de frecuencia cardíaca
         uint8_t contadorQRS = 0;
 
         uint16_t j = 0;
-        while (j<BUFFER_SIZE)
+
+        while (j < BUFFER_SIZE)
         {
-            if(ecg[j]>umbralVoltaje && contadorQRS<2)
+            if (ecg[j] > umbralVoltaje)
             {
                 contadorQRS++;
-                j = j+50;
-            }
+                printf("contador: %d\n", contadorQRS);
+                float frecuenciaAUX = frecuenciaCardiaca;
+                uint16_t deltaPosicion = j - posicionAnteriorQRS;
+                posicionAnteriorQRS = j;
+                periodoCardiaco = deltaPosicion * 2.5 / BUFFER_SIZE; // delta en tiempo
+                frecuenciaCardiaca = 1 / (periodoCardiaco/60);
 
+            if(contadorQRS==1){
+                    printf("frec:%.2f\n",frecuenciaAUX);
+                    frecuenciaCardiaca=frecuenciaAUX;
+                }
+            else{
+                    printf("frec:%.2f\n", frecuenciaCardiaca);
+                }
+          
+        
+            //Compara si tiene taquicardia o no:   
+             if (frecuenciaCardiaca > limiteTaquicardia)
+                {
+                    TAQUICARDIA = true;
+                }
+                else
+                {
+                    TAQUICARDIA = false;
+                }
+                // Comparación con bradicardia
+            if (frecuenciaCardiaca < limiteBradicardia)
+                {
+                    BRADICARDIA = true;
+                }
+            else
+                {
+                    BRADICARDIA = false;
+                }
+            if(limiteBradicardia<frecuenciaCardiaca && frecuenciaCardiaca<limiteTaquicardia)
+            {
+                FRECUENCIA_NORMAL = true;
+            }
+            else
+            {
+                FRECUENCIA_NORMAL = false;
+            }
+            
+                j = j + 70;
+            }
+            j++;
         }
         
-        frecuenciaCardiaca = contadorQRS/BUFFER_SIZE; // ¿Como relacionar con el tiempo? cada 5miliseg 1 muestra. En 2,5 segundos se levanta el vector
-        frecuenciaCardiaca = frecuenciaCardiaca*((1/2.5)*60);
-
-        // Comparación con taquicardia
-        if(frecuenciaCardiaca>limiteTaquicardia)
-        {
-            TAQUICARDIA = true;
-        }
-        else
-        {
-            TAQUICARDIA = false;
-        }
-        // Comparación con bradicardia
-        if(frecuenciaCardiaca<limiteBradicardia)
-        {
-            BRADICARDIA = true;
-        }
-        else
-        {
-            BRADICARDIA = false;
-        }
+        PROCESANDO = false;
+        
+    
     }
 }
 
-
+void FuncTimerSenial(void* param){
+    xTaskNotifyGive(mostrarTaskHandle);
+}
 
 /**
  * @brief Función a ejecutarse ante un interrupción de recepción 
@@ -179,9 +203,10 @@ void read_data(uint8_t * data, uint8_t length){
  * por BLE.
  * 
  */
-static void FftTask(void *pvParameter){
+static void mostrar(void *pvParameter){
     char msg[128];
     char msg_chunk[24];
+    char frecuencia[128];
     static uint8_t indice = 0;
     while(true){
         ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
@@ -199,6 +224,23 @@ static void FftTask(void *pvParameter){
         indice += CHUNK;
 
         BleSendString(msg);
+        if(TAQUICARDIA)
+        {
+            sprintf(frecuencia, "*J%s", "Taquicardia.\n");
+            BleSendString(frecuencia);
+        }
+
+        if(BRADICARDIA)
+        {
+            sprintf(frecuencia, "*J%s", "Bradicardia.\n ");
+            BleSendString(frecuencia);
+        }
+
+        if(FRECUENCIA_NORMAL)
+        {
+            sprintf(frecuencia, "*J%s", "Frecuencia normal.\n");
+            BleSendString(frecuencia);
+        }
     }
 }
 
@@ -209,14 +251,21 @@ void app_main(void){
         "ESP_EDU_IRI_JOSE",
         read_data
     };
+    
+    timer_config_t timer_senial = {
+        .timer = TIMER_B,
+        .period = T_SENIAL*CHUNK,
+        .func_p = FuncTimerSenial,
+        .param_p = NULL
+    };
 
+
+    TimerInit(&timer_senial);
     LedsInit();  
-    //FFTInit();  
-    //LowPassInit(SAMPLE_FREQ, 30, ORDER_2);
-    //HiPassInit(SAMPLE_FREQ, 1, ORDER_2);
+    LowPassInit(SAMPLE_FREQ, 30, ORDER_2);
+    HiPassInit(SAMPLE_FREQ, 1, ORDER_2);
+   
     BleInit(&ble_configuration);
-
-
 
     timer_config_t timerECG = {
         .timer = TIMER_A,
@@ -235,9 +284,9 @@ void app_main(void){
 	AnalogOutputInit();
 
     xTaskCreate(&adquirirProcesarECG, "adquirirProcesarECG", 2048, NULL, 5, &adquirirProcesarECGTaskHandle);
-    xTaskCreate(&calcularParametrosECG, "calcularParametrosECG", 2048, NULL, 5, &calcularParametrosECGTaskHandle);
-
-  
+    //xTaskCreate(&calcularParametrosECG, "calcularParametrosECG", 2048, NULL, 5, &calcularParametrosECGTaskHandle);
+    xTaskCreate(&mostrar, "mostrar", 2048, NULL, 5, &mostrarTaskHandle);
+   
     //Inicialización del puerto serie
 	serial_config_t myUart = {
 		.port = UART_PC,
@@ -249,8 +298,9 @@ void app_main(void){
 
     // Inicialización del conteo de timers 
     TimerStart(timerECG.timer);
+    TimerStart(timer_senial.timer);
 
-    xTaskCreate(&FftTask, "FFT", 2048, NULL, 5, &fft_task_handle);
+
     while(1){
         vTaskDelay(CONFIG_BLINK_PERIOD / portTICK_PERIOD_MS);
         switch(BleStatus()){

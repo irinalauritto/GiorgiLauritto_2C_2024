@@ -8,7 +8,7 @@ set(srcs
     "microcontroller/src/uart_mcu.c"
     #"microcontroller/src/spi_mcu.c"
     #"microcontroller/src/pwm_mcu.c"
-    #"microcontroller/src/i2c_mcu.c"
+    "microcontroller/src/i2c_mcu.c"
     "microcontroller/src/gpio_fast_out_mcu.c"
     "microcontroller/src/analog_io_mcu.c"
     "microcontroller/src/ble_mcu.c"
@@ -20,6 +20,11 @@ set(srcs
     "devices/src/hc_sr04.c"
     "devices/src/ws2812b.c"
     "devices/src/neopixel_stripe.c"
+    "devices/src/maxm86161/app.c"
+    "devices/src/maxm86161/hrm_helper.c"
+    "devices/src/maxm86161/maxm86161_hrm_spo2.c"
+    "devices/src/maxm86161/MAXM86161_I2C.c"
+    "devices/src/maxm86161/MAXM86161.c"
     #"devices/src/ili9341.c"
     #"devices/src/fonts.c"
     #"devices/src/icons.c"
@@ -38,7 +43,8 @@ set(srcs
 
 # Always included headers
 set(includes "microcontroller/inc"
-             "devices/inc")
+             "devices/inc"
+             "devices/inc/maxm86161")
 
 idf_component_register(SRCS ${srcs}
                        INCLUDE_DIRS ${includes}
