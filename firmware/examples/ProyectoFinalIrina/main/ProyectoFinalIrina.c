@@ -35,6 +35,7 @@
 #include "iir_filter.h"
 /*==================[macros and definitions]=================================*/
 #define CONFIG_BLINK_PERIOD 500
+#define CONFIG_BLINK_PERIOD_DIAGNOSTICO 1000
 #define LED_BT	            LED_1
 #define BUFFER_SIZE         500
 #define SAMPLE_FREQ	        220
@@ -47,6 +48,7 @@ float ecg[BUFFER_SIZE];
 TaskHandle_t mostrarTaskHandle = NULL;
 TaskHandle_t adquirirProcesarECGTaskHandle = NULL;
 TaskHandle_t calcularParametrosECGTaskHandle = NULL;
+TaskHandle_t mandarDiagnosticoTaskHandle = NULL;
 
 uint16_t datoConversionAD;
 
@@ -104,8 +106,6 @@ static void adquirirProcesarECG(void *pvParameter){
 static void calcularParametrosECG(void *pvParameter){
     while (true)
     {
-        char frecuencia[128];
-        char frecCardiaca[128];
         ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
         PROCESANDO = true;
         uint16_t umbralVoltaje = 350;
@@ -142,6 +142,7 @@ static void calcularParametrosECG(void *pvParameter){
              if (frecuenciaCardiaca > limiteTaquicardia)
                 {
                     TAQUICARDIA = true;
+            
                 }
                 else
                 {
@@ -224,26 +225,43 @@ static void mostrar(void *pvParameter){
         indice += CHUNK;
 
         BleSendString(msg);
-        if(TAQUICARDIA)
-        {
-            sprintf(frecuencia, "*J%s", "Taquicardia.\n");
-            BleSendString(frecuencia);
+        
         }
-
-        if(BRADICARDIA)
-        {
-            sprintf(frecuencia, "*J%s", "Bradicardia.\n ");
-            BleSendString(frecuencia);
-        }
-
-        if(FRECUENCIA_NORMAL)
-        {
-            sprintf(frecuencia, "*J%s", "Frecuencia normal.\n");
-            BleSendString(frecuencia);
-        }
-    }
 }
 
+
+static void mandarDiagnostico(void *pvParameter){
+  char frecuencia[128];  
+  char valor[128];
+  while(true){
+
+            if(TAQUICARDIA)
+         {
+            sprintf(valor,"*J%.2f",frecuenciaCardiaca);
+            sprintf(frecuencia, "*J%s", ": Tiene Taquicardia.\n");
+            strcat(valor,frecuencia);
+            BleSendString(valor);
+         }
+
+         if(BRADICARDIA)
+         {
+            sprintf(valor,"*J%.2f",frecuenciaCardiaca);
+            sprintf(frecuencia, "*J%s", ": Tiene Bradicardia.\n ");
+            strcat(valor,frecuencia);
+            BleSendString(valor);
+        }
+
+         if(FRECUENCIA_NORMAL)
+         {
+            sprintf(valor,"*J%.2f",frecuenciaCardiaca);
+            sprintf(frecuencia, "*J%s", ": Frecuencia normal.\n");
+            strcat(valor,frecuencia);
+            BleSendString(valor);
+         }
+
+        vTaskDelay(CONFIG_BLINK_PERIOD_DIAGNOSTICO / portTICK_PERIOD_MS);
+    }
+}
 /*==================[external functions definition]==========================*/
 void app_main(void){
 
@@ -284,8 +302,9 @@ void app_main(void){
 	AnalogOutputInit();
 
     xTaskCreate(&adquirirProcesarECG, "adquirirProcesarECG", 2048, NULL, 5, &adquirirProcesarECGTaskHandle);
-    //xTaskCreate(&calcularParametrosECG, "calcularParametrosECG", 2048, NULL, 5, &calcularParametrosECGTaskHandle);
+    xTaskCreate(&calcularParametrosECG, "calcularParametrosECG", 2048, NULL, 5, &calcularParametrosECGTaskHandle);
     xTaskCreate(&mostrar, "mostrar", 2048, NULL, 5, &mostrarTaskHandle);
+    xTaskCreate(&mandarDiagnostico, "mandarDiagnostico", 2048, NULL, 5, &mandarDiagnosticoTaskHandle);
    
     //Inicialización del puerto serie
 	serial_config_t myUart = {
