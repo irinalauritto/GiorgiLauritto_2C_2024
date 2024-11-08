@@ -1,19 +1,18 @@
-/*! @mainpage Ejemplo Bluetooth - FFT
+/*! @mainpage Proyecto Final Integrador
  *
  * @section genDesc General Description
  *
- * Este proyecto ejemplifica el uso del módulo de comunicación 
- * Bluetooth Low Energy (BLE), junto con el de cálculo de la FFT 
- * de una señal.
- * Permite graficar en una aplicación móvil la FFT de una señal. 
+ * Este es el proyecto final presentado en la ctaedra de Electronica Programable, donde el 
+ * código adquiere datos de ECG, calcula parámetros como la frecuencia cardíaca y diagnostica arritmias, 
+ * como bradicardia y taquicardia. Estos datos se envían a través de BLE para su visualización en una aplicación móvil.
  *
  * @section changelog Changelog
  *
  * |   Date	    | Description                                    |
  * |:----------:|:-----------------------------------------------|
- * | 02/04/2024 | Document creation		                         |
+ * | 02/04/2024 | Proyecto Final Integrador	                     |
  *
- * @author Albano Peñalva (albano.penalva@uner.edu.ar)
+ * @author Josefina Giorgi (josefina.giorgi@ingenieria.uner.edu.ar) y Irina Lauritto (irina.lauritto@ingenieria.uner.edu.ar)
  *
  */
 
@@ -34,45 +33,92 @@
 #include "analog_io_mcu.h"
 #include "iir_filter.h"
 /*==================[macros and definitions]=================================*/
-#define CONFIG_BLINK_PERIOD 500
+/** @brief Periodo para mostrar el diagnóstico (ms) */ 
 #define CONFIG_BLINK_PERIOD_DIAGNOSTICO 1000
-#define LED_BT	            LED_1
-#define BUFFER_SIZE         500
-#define SAMPLE_FREQ	        220
-#define RETARDO_ECG         5000 //5 milisegundos
-#define CHUNK               4 
-#define T_SENIAL            4000 
+
+/** @brief Periodo asociado a BLE (ms) */ 
+#define CONFIG_BLINK_PERIOD 500
+
+/** @brief LED utilizado para la notificación de estado Bluetooth */ 
+#define LED_BT LED_1
+
+/** @brief Tamaño del buffer de datos de ECG */ 
+#define BUFFER_SIZE 500
+
+/** @brief Frecuencia de muestreo en Hz */ 
+#define SAMPLE_FREQ 220
+
+/** @brief Retardo en ms para la adquisición de señal de ECG */ 
+#define RETARDO_ECG 5000
+
+/** @brief Número de muestras en cada fragmento (chunk) de señal */ 
+#define CHUNK 4
+
+/** @brief Periodo de señal en ms */ 
+#define T_SENIAL 4000
+
 /*==================[internal data definition]===============================*/
+/** @brief Buffer para almacenar los datos de ECG */
 float ecg[BUFFER_SIZE];
 
+/** @brief Maneja la tarea de visualización de datos */
 TaskHandle_t mostrarTaskHandle = NULL;
+
+/** @brief Maneja la tarea de adquisición y procesamiento de ECG */
 TaskHandle_t adquirirProcesarECGTaskHandle = NULL;
+
+/** @brief Maneja la tarea de cálculo de parámetros ECG */
 TaskHandle_t calcularParametrosECGTaskHandle = NULL;
+
+/** @brief Maneja la tarea de diagnóstico */
 TaskHandle_t mandarDiagnosticoTaskHandle = NULL;
 
+/** @brief Dato de conversión del canal analógico */
 uint16_t datoConversionAD;
 
+/** @brief Indicador de detección de bradicardia */
 bool BRADICARDIA = false;
+
+/** @brief Indicador de detección de taquicardia */
 bool TAQUICARDIA = false;
+
+/** @brief Indicador de procesamiento en curso */
 bool PROCESANDO = false;
+
+/** @brief Indicador de frecuencia cardíaca normal */
 bool FRECUENCIA_NORMAL = false;
 
+/** @brief Indicador de filtro activado */
 bool filter = false;
 
+/** @brief Variable para almacenar la frecuencia cardíaca calculada */
 float frecuenciaCardiaca;
 
+/** @brief Almacenamiento temporal para los datos filtrados */
 static float ecg_filt[CHUNK];
 
-// Limites en bpm
+/** @brief Límite superior para detección de taquicardia (bpm) */
 uint8_t limiteTaquicardia = 91;
+
+/** @brief Límite inferior para detección de bradicardia (bpm) */
 uint8_t limiteBradicardia = 59;
 
 /*==================[internal functions declaration]=========================*/
 
+/**
+ * @brief Función de temporización para la adquisición de datos de ECG.
+ * @param param Puntero a parámetros de función (opcional).
+ * @details Activa la tarea de adquisición de datos ECG cada vez que se cumple el temporizador.
+ */
 void funcTimerECG(void* param){
 	vTaskNotifyGiveFromISR(adquirirProcesarECGTaskHandle, pdFALSE);
 }
 
+/**
+ * @brief Tarea para adquirir y procesar la señal de ECG.
+ * @param pvParameter Puntero a parámetros de función (opcional).
+ * @details Lee el valor del canal analógico para obtener datos de ECG y los almacena en el buffer hasta completarlo; luego, activa la tarea de cálculo de parámetros.
+ */
 static void adquirirProcesarECG(void *pvParameter){
 
  uint16_t i = 0;
@@ -103,6 +149,11 @@ static void adquirirProcesarECG(void *pvParameter){
     }
 }
 
+/**
+ * @brief Tarea para calcular los parámetros de ECG, como la frecuencia cardíaca y la detección de arritmias.
+ * @param pvParameter Puntero a parámetros de función (opcional).
+ * @details Procesa el buffer de ECG para contar complejos QRS y calcular la frecuencia cardíaca, indicando taquicardia, bradicardia o ritmo normal según los valores obtenidos.
+ */
 static void calcularParametrosECG(void *pvParameter){
     while (true)
     {
@@ -177,16 +228,20 @@ static void calcularParametrosECG(void *pvParameter){
     }
 }
 
+/**
+ * @brief Función de temporización para la mostrar de datos de ECG.
+ * @param param Puntero a parámetros de función (opcional).
+ * @details Activa la tarea de mostrar datos  cada vez que se cumple el temporizador.
+ */
 void FuncTimerSenial(void* param){
     xTaskNotifyGive(mostrarTaskHandle);
 }
 
 /**
- * @brief Función a ejecutarse ante un interrupción de recepción 
- * a través de la conexión BLE.
- * 
- * @param data      Puntero a array de datos recibidos
- * @param length    Longitud del array de datos recibidos
+ * @brief Función ejecutada ante una interrupción de recepción de datos por BLE.
+ * @param data Puntero a los datos recibidos.
+ * @param length Longitud del array de datos recibidos.
+ * @details Activa o desactiva el filtro de señal de acuerdo con los datos recibidos.
  */
 void read_data(uint8_t * data, uint8_t length){
     switch(data[0]){
@@ -200,9 +255,9 @@ void read_data(uint8_t * data, uint8_t length){
 }
 
 /**
- * @brief Tarea para el cálculo de la FFT y el envío de datos
- * por BLE.
- * 
+ * @brief Tarea para el procesamiento y envío de datos de ECG a través de BLE.
+ * @param pvParameter Puntero a parámetros de función (opcional).
+ * @details Procesa los datos de ECG con filtros pasa bajo y pasa alto y los envía mediante BLE en segmentos para visualización.
  */
 static void mostrar(void *pvParameter){
     char msg[128];
@@ -229,7 +284,11 @@ static void mostrar(void *pvParameter){
         }
 }
 
-
+/**
+ * @brief Tarea para el envío de diagnóstico basado en la frecuencia cardíaca calculada.
+ * @param pvParameter Puntero a parámetros de función (opcional).
+ * @details Envía el diagnóstico de taquicardia, bradicardia o frecuencia normal según la frecuencia cardíaca detectada.
+ */
 static void mandarDiagnostico(void *pvParameter){
   char frecuencia[128];  
   char valor[128];
@@ -263,6 +322,10 @@ static void mandarDiagnostico(void *pvParameter){
     }
 }
 /*==================[external functions definition]==========================*/
+/**
+ * @brief Función principal del programa. Configura y ejecuta las tareas de adquisición de ECG y comunicación BLE.
+ * @details Inicializa la configuración de BLE, temporizadores y tareas para la obtención de datos de ECG, cálculo de parámetros y diagnóstico.
+ */
 void app_main(void){
 
       ble_config_t ble_configuration = {
