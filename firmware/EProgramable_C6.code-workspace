@@ -106,7 +106,8 @@
             "rtc_mcu.h": "c",
             "fft.h": "c",
             "i2c.h": "c",
-            "esp_bt.h": "c"
+            "esp_bt.h": "c",
+            "spi_mcu.h": "c"
         },
     },
     "tasks": {
