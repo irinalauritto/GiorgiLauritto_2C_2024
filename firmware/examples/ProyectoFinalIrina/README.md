@@ -1,7 +1,6 @@
-# Ejemplo Bluetooth - FFT
+# Proyecto Final Giorgi-Lauritto - ECG
 
-Este proyecto ejemplifica el uso del módulo de comunicación Bluetooth Low Energy (BLE), junto con el de cálculo de la FFT de una señal.
-Permite graficar en una aplicación móvil la FFT de una señal.
+En este proyecto se encuentra una parte del proyecto final presentado en la cátedra de Electronica Programable por las alumnas Josefina Giorgi e Irina Lauritto.
 
 ## Cómo usar el ejemplo
 
@@ -44,7 +43,5 @@ En este proyecto ya se han realizado estas modificaciones, por lo tanto no es ne
 
 1. Instalar y ejecutar en el dispositivo Android la aplicación [Bluetooth Electronics](https://play.google.com/store/apps/details?id=com.keuwl.arduinobluetooth)
 2. Presionando en el botón `Connect`, vincular el móvil con la placa (se mostrará con el nombre `ESP_EDU_1`)
-3. Crear un nuevo Panel que contenga un Gráfico "X-Y" (menú `Graphs`) y un botón (menú `Buttons`) que al presionarse envíe una "R".
-![app1](BLE_FFT_1.jpg)
-4. Ejecutar este panel y presionar la el botón creado. Se graficará la magnitud del espectro de la señal de ECG (azul) y de la misma luego de ser filtrada (naranja).
-![app2](BLE_FFT_2.jpg)
+3. 3. Crear un nuevo Panel que contenga un Gráfico "Roll" (menú `Graphs`) y un switch (menú `Switches`) que envíe una "A" cuando esté en "ON" y una "a" cuando esté en "OFF". Además es necesario agregra un cuadro de texto (menú `Text`) que reciba la letra J.
+4. Ejecutar este panel. Verá la grafica de un ECG (con continua y ruido). Activar el filtro, y ahora la salida corresponderá a la señal filtrada (sin continua y con menos ruido). Además se mostrará como texto el diagnóstico (bradicardia, taquicardia o frecuencia normal).
