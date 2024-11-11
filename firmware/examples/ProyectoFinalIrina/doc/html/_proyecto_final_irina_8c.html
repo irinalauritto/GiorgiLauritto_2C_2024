@@ -1,0 +1,999 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.11.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Proyecto Integrador Final - ECG: Referencia del archivo C:/ProyectoFinalEP/GiorgiLauritto_2C_2024/firmware/examples/ProyectoFinalIrina/main/ProyectoFinalIrina.c</title>
+<link rel="icon" href="icon.ico" type="image/x-icon" />
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="clipboard.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="cookie.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+  $(function() { init_search(); });
+/* @license-end */
+</script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="fiuner.png"/></td>
+  <td id="projectalign">
+   <div id="projectname">Proyecto Integrador Final - ECG<span id="projectnumber">&#160;1.0</span>
+   </div>
+   <div id="projectbrief">Parte del proyecto final de las alumnas Giorgi y Lauritto que realiza las tareas relacionadas al electrocardiograma.</div>
+  </td>
+    <td>        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <span id="MSearchSelect"                onmouseover="return searchBox.OnSearchSelectShow()"                onmouseout="return searchBox.OnSearchSelectHide()">&#160;</span>
+          <input type="text" id="MSearchField" value="" placeholder="Buscar" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.svg" alt=""/></a>
+          </span>
+        </div>
+</td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generado por Doxygen 1.11.0 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() { codefold.init(0); });
+/* @license-end */
+</script>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function(){initNavTree('_proyecto_final_irina_8c.html',''); initResizable(true); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Cargando...</div>
+<div class="SRStatus" id="Searching">Buscando...</div>
+<div class="SRStatus" id="NoMatches">Nada coincide</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="summary">
+<a href="#define-members">defines</a> &#124;
+<a href="#func-members">Funciones</a> &#124;
+<a href="#var-members">Variables</a>  </div>
+  <div class="headertitle"><div class="title">Referencia del archivo ProyectoFinalIrina.c</div></div>
+</div><!--header-->
+<div class="contents">
+<div class="textblock"><code>#include &lt;stdio.h&gt;</code><br />
+<code>#include &lt;stdint.h&gt;</code><br />
+<code>#include &lt;string.h&gt;</code><br />
+<code>#include &quot;freertos/FreeRTOS.h&quot;</code><br />
+<code>#include &quot;freertos/task.h&quot;</code><br />
+<code>#include &quot;<a class="el" href="led_8h_source.html">led.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="neopixel__stripe_8h_source.html">neopixel_stripe.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="ble__mcu_8h_source.html">ble_mcu.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="delay__mcu_8h_source.html">delay_mcu.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="timer__mcu_8h_source.html">timer_mcu.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="uart__mcu_8h_source.html">uart_mcu.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="analog__io__mcu_8h_source.html">analog_io_mcu.h</a>&quot;</code><br />
+<code>#include &quot;iir_filter.h&quot;</code><br />
+</div>
+<p><a href="_proyecto_final_irina_8c_source.html">Ir al código fuente de este archivo.</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
+defines</h2></td></tr>
+<tr class="memitem:ac5018bb87a6705370e7e9637e4a42fbf" id="r_ac5018bb87a6705370e7e9637e4a42fbf"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac5018bb87a6705370e7e9637e4a42fbf">CONFIG_PERIOD_DIAGNOSTICO</a>&#160;&#160;&#160;1000</td></tr>
+<tr class="memdesc:ac5018bb87a6705370e7e9637e4a42fbf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Periodo para mostrar el diagnóstico (ms)  <br /></td></tr>
+<tr class="separator:ac5018bb87a6705370e7e9637e4a42fbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3df1b4cad09974bfc68858fad7cdc054" id="r_a3df1b4cad09974bfc68858fad7cdc054"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3df1b4cad09974bfc68858fad7cdc054">CONFIG_BLINK_PERIOD</a>&#160;&#160;&#160;500</td></tr>
+<tr class="memdesc:a3df1b4cad09974bfc68858fad7cdc054"><td class="mdescLeft">&#160;</td><td class="mdescRight">Periodo asociado a BLE (ms)  <br /></td></tr>
+<tr class="separator:a3df1b4cad09974bfc68858fad7cdc054"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7a3ccd8a43b5c5e8a4d573780da1fd4a" id="r_a7a3ccd8a43b5c5e8a4d573780da1fd4a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7a3ccd8a43b5c5e8a4d573780da1fd4a">LED_BT</a>&#160;&#160;&#160;<a class="el" href="group___l_e_d.html#ggab6831a7d06c0a2bc69f9b024f6445a80a11a9adb9054de1fe01d6a6750075f57b">LED_1</a></td></tr>
+<tr class="memdesc:a7a3ccd8a43b5c5e8a4d573780da1fd4a"><td class="mdescLeft">&#160;</td><td class="mdescRight">LED utilizado para la notificación de estado Bluetooth.  <br /></td></tr>
+<tr class="separator:a7a3ccd8a43b5c5e8a4d573780da1fd4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6b20d41d6252e9871430c242cb1a56e7" id="r_a6b20d41d6252e9871430c242cb1a56e7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6b20d41d6252e9871430c242cb1a56e7">BUFFER_SIZE</a>&#160;&#160;&#160;500</td></tr>
+<tr class="memdesc:a6b20d41d6252e9871430c242cb1a56e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tamaño del buffer de datos de ECG.  <br /></td></tr>
+<tr class="separator:a6b20d41d6252e9871430c242cb1a56e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9401e43a8c86acafb31c8e2709baefa1" id="r_a9401e43a8c86acafb31c8e2709baefa1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9401e43a8c86acafb31c8e2709baefa1">SAMPLE_FREQ</a>&#160;&#160;&#160;220</td></tr>
+<tr class="memdesc:a9401e43a8c86acafb31c8e2709baefa1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Frecuencia de muestreo en Hz.  <br /></td></tr>
+<tr class="separator:a9401e43a8c86acafb31c8e2709baefa1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a036ce15eb08f2aaee6d849f89e6e6eb1" id="r_a036ce15eb08f2aaee6d849f89e6e6eb1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a036ce15eb08f2aaee6d849f89e6e6eb1">RETARDO_ECG</a>&#160;&#160;&#160;5000</td></tr>
+<tr class="memdesc:a036ce15eb08f2aaee6d849f89e6e6eb1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retardo en ms para la adquisición de señal de ECG.  <br /></td></tr>
+<tr class="separator:a036ce15eb08f2aaee6d849f89e6e6eb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a25022864dfc8ec428e7128282e57b136" id="r_a25022864dfc8ec428e7128282e57b136"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a25022864dfc8ec428e7128282e57b136">CHUNK</a>&#160;&#160;&#160;4</td></tr>
+<tr class="memdesc:a25022864dfc8ec428e7128282e57b136"><td class="mdescLeft">&#160;</td><td class="mdescRight">Número de muestras en cada fragmento (chunk) de señal.  <br /></td></tr>
+<tr class="separator:a25022864dfc8ec428e7128282e57b136"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8ff4a12879297e69a77292c6052452b5" id="r_a8ff4a12879297e69a77292c6052452b5"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8ff4a12879297e69a77292c6052452b5">T_SENIAL</a>&#160;&#160;&#160;4000</td></tr>
+<tr class="memdesc:a8ff4a12879297e69a77292c6052452b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Periodo de señal en ms.  <br /></td></tr>
+<tr class="separator:a8ff4a12879297e69a77292c6052452b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
+Funciones</h2></td></tr>
+<tr class="memitem:aecf11fee4eb3578979c57e1476cd0c4c" id="r_aecf11fee4eb3578979c57e1476cd0c4c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aecf11fee4eb3578979c57e1476cd0c4c">funcTimerECG</a> (void *param)</td></tr>
+<tr class="memdesc:aecf11fee4eb3578979c57e1476cd0c4c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Función de temporización para la adquisición de datos de ECG.  <br /></td></tr>
+<tr class="separator:aecf11fee4eb3578979c57e1476cd0c4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adefd8ab335f572aca05eeb0ebda4cfba" id="r_adefd8ab335f572aca05eeb0ebda4cfba"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adefd8ab335f572aca05eeb0ebda4cfba">adquirirProcesarECG</a> (void *pvParameter)</td></tr>
+<tr class="memdesc:adefd8ab335f572aca05eeb0ebda4cfba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tarea para adquirir y procesar la señal de ECG.  <br /></td></tr>
+<tr class="separator:adefd8ab335f572aca05eeb0ebda4cfba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad92215f53851e2f8fda02582c88d058c" id="r_ad92215f53851e2f8fda02582c88d058c"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad92215f53851e2f8fda02582c88d058c">calcularParametrosECG</a> (void *pvParameter)</td></tr>
+<tr class="memdesc:ad92215f53851e2f8fda02582c88d058c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tarea para calcular los parámetros de ECG, como la frecuencia cardíaca y la detección de arritmias.  <br /></td></tr>
+<tr class="separator:ad92215f53851e2f8fda02582c88d058c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7abd1c0b0bdd5a062b3a36bf63dd2e9b" id="r_a7abd1c0b0bdd5a062b3a36bf63dd2e9b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7abd1c0b0bdd5a062b3a36bf63dd2e9b">FuncTimerSenial</a> (void *param)</td></tr>
+<tr class="memdesc:a7abd1c0b0bdd5a062b3a36bf63dd2e9b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Función de temporización para la mostrar de datos de ECG.  <br /></td></tr>
+<tr class="separator:a7abd1c0b0bdd5a062b3a36bf63dd2e9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab56e1ff0f71e003f2e08c6ec294528b1" id="r_ab56e1ff0f71e003f2e08c6ec294528b1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab56e1ff0f71e003f2e08c6ec294528b1">read_data</a> (uint8_t *data, uint8_t length)</td></tr>
+<tr class="memdesc:ab56e1ff0f71e003f2e08c6ec294528b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Función ejecutada ante una interrupción de recepción de datos por BLE.  <br /></td></tr>
+<tr class="separator:ab56e1ff0f71e003f2e08c6ec294528b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2466d768bd6408ec0b68598a9628806d" id="r_a2466d768bd6408ec0b68598a9628806d"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2466d768bd6408ec0b68598a9628806d">mostrar</a> (void *pvParameter)</td></tr>
+<tr class="memdesc:a2466d768bd6408ec0b68598a9628806d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tarea para el procesamiento y envío de datos de ECG a través de BLE.  <br /></td></tr>
+<tr class="separator:a2466d768bd6408ec0b68598a9628806d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3a3c533b2d5db8d0023f6457d521814e" id="r_a3a3c533b2d5db8d0023f6457d521814e"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3a3c533b2d5db8d0023f6457d521814e">mandarDiagnostico</a> (void *pvParameter)</td></tr>
+<tr class="memdesc:a3a3c533b2d5db8d0023f6457d521814e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tarea para el envío de diagnóstico basado en la frecuencia cardíaca calculada.  <br /></td></tr>
+<tr class="separator:a3a3c533b2d5db8d0023f6457d521814e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a630544a7f0a2cc40d8a7fefab7e2fe70" id="r_a630544a7f0a2cc40d8a7fefab7e2fe70"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a630544a7f0a2cc40d8a7fefab7e2fe70">app_main</a> (void)</td></tr>
+<tr class="memdesc:a630544a7f0a2cc40d8a7fefab7e2fe70"><td class="mdescLeft">&#160;</td><td class="mdescRight">Función principal del programa. Configura y ejecuta las tareas de adquisición de ECG y comunicación BLE.  <br /></td></tr>
+<tr class="separator:a630544a7f0a2cc40d8a7fefab7e2fe70"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:af172c585be9d45228fa69274a532fbc0" id="r_af172c585be9d45228fa69274a532fbc0"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af172c585be9d45228fa69274a532fbc0">ecg</a> [<a class="el" href="#a6b20d41d6252e9871430c242cb1a56e7">BUFFER_SIZE</a>]</td></tr>
+<tr class="memdesc:af172c585be9d45228fa69274a532fbc0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Buffer para almacenar los datos de ECG.  <br /></td></tr>
+<tr class="separator:af172c585be9d45228fa69274a532fbc0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abfd4b9c8a63421915a00cac5c5ca13cb" id="r_abfd4b9c8a63421915a00cac5c5ca13cb"><td class="memItemLeft" align="right" valign="top">TaskHandle_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abfd4b9c8a63421915a00cac5c5ca13cb">mostrarTaskHandle</a> = <a class="el" href="ili9341_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a></td></tr>
+<tr class="memdesc:abfd4b9c8a63421915a00cac5c5ca13cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maneja la tarea de visualización de datos.  <br /></td></tr>
+<tr class="separator:abfd4b9c8a63421915a00cac5c5ca13cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a665a0cca79c6df3fae1097666172ec1e" id="r_a665a0cca79c6df3fae1097666172ec1e"><td class="memItemLeft" align="right" valign="top">TaskHandle_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a665a0cca79c6df3fae1097666172ec1e">adquirirProcesarECGTaskHandle</a> = <a class="el" href="ili9341_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a></td></tr>
+<tr class="memdesc:a665a0cca79c6df3fae1097666172ec1e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maneja la tarea de adquisición y procesamiento de ECG.  <br /></td></tr>
+<tr class="separator:a665a0cca79c6df3fae1097666172ec1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad424c02af299f2437d68b8e86e603c16" id="r_ad424c02af299f2437d68b8e86e603c16"><td class="memItemLeft" align="right" valign="top">TaskHandle_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad424c02af299f2437d68b8e86e603c16">calcularParametrosECGTaskHandle</a> = <a class="el" href="ili9341_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a></td></tr>
+<tr class="memdesc:ad424c02af299f2437d68b8e86e603c16"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maneja la tarea de cálculo de parámetros ECG.  <br /></td></tr>
+<tr class="separator:ad424c02af299f2437d68b8e86e603c16"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a06ac3c585939e725afd65a50ac971dc1" id="r_a06ac3c585939e725afd65a50ac971dc1"><td class="memItemLeft" align="right" valign="top">TaskHandle_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a06ac3c585939e725afd65a50ac971dc1">mandarDiagnosticoTaskHandle</a> = <a class="el" href="ili9341_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a></td></tr>
+<tr class="memdesc:a06ac3c585939e725afd65a50ac971dc1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maneja la tarea de diagnóstico.  <br /></td></tr>
+<tr class="separator:a06ac3c585939e725afd65a50ac971dc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afd8cf86071a8670bee2c5405054f721f" id="r_afd8cf86071a8670bee2c5405054f721f"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afd8cf86071a8670bee2c5405054f721f">datoConversionAD</a></td></tr>
+<tr class="memdesc:afd8cf86071a8670bee2c5405054f721f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dato de conversión del canal analógico.  <br /></td></tr>
+<tr class="separator:afd8cf86071a8670bee2c5405054f721f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a492f46518b9451620d1a7253913d5f9d" id="r_a492f46518b9451620d1a7253913d5f9d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a492f46518b9451620d1a7253913d5f9d">BRADICARDIA</a> = false</td></tr>
+<tr class="memdesc:a492f46518b9451620d1a7253913d5f9d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Indicador de detección de bradicardia.  <br /></td></tr>
+<tr class="separator:a492f46518b9451620d1a7253913d5f9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae97a0a07d4eb02b60e57cc77632b4796" id="r_ae97a0a07d4eb02b60e57cc77632b4796"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae97a0a07d4eb02b60e57cc77632b4796">TAQUICARDIA</a> = false</td></tr>
+<tr class="memdesc:ae97a0a07d4eb02b60e57cc77632b4796"><td class="mdescLeft">&#160;</td><td class="mdescRight">Indicador de detección de taquicardia.  <br /></td></tr>
+<tr class="separator:ae97a0a07d4eb02b60e57cc77632b4796"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a82610f68a9f7e81327516179689ae9b4" id="r_a82610f68a9f7e81327516179689ae9b4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a82610f68a9f7e81327516179689ae9b4">PROCESANDO</a> = false</td></tr>
+<tr class="memdesc:a82610f68a9f7e81327516179689ae9b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Indicador de procesamiento en curso.  <br /></td></tr>
+<tr class="separator:a82610f68a9f7e81327516179689ae9b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5d31bd6916ffd9f6c500178353e2b583" id="r_a5d31bd6916ffd9f6c500178353e2b583"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5d31bd6916ffd9f6c500178353e2b583">FRECUENCIA_NORMAL</a> = false</td></tr>
+<tr class="memdesc:a5d31bd6916ffd9f6c500178353e2b583"><td class="mdescLeft">&#160;</td><td class="mdescRight">Indicador de frecuencia cardíaca normal.  <br /></td></tr>
+<tr class="separator:a5d31bd6916ffd9f6c500178353e2b583"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5b85fc472953eac39c2629b1f5d68617" id="r_a5b85fc472953eac39c2629b1f5d68617"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5b85fc472953eac39c2629b1f5d68617">filter</a> = false</td></tr>
+<tr class="memdesc:a5b85fc472953eac39c2629b1f5d68617"><td class="mdescLeft">&#160;</td><td class="mdescRight">Indicador de filtro activado.  <br /></td></tr>
+<tr class="separator:a5b85fc472953eac39c2629b1f5d68617"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a22b2de8318a9d8f8ea4ece14678f5c17" id="r_a22b2de8318a9d8f8ea4ece14678f5c17"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a22b2de8318a9d8f8ea4ece14678f5c17">frecuenciaCardiaca</a></td></tr>
+<tr class="memdesc:a22b2de8318a9d8f8ea4ece14678f5c17"><td class="mdescLeft">&#160;</td><td class="mdescRight">Variable para almacenar la frecuencia cardíaca calculada.  <br /></td></tr>
+<tr class="separator:a22b2de8318a9d8f8ea4ece14678f5c17"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3156c6fa263cbf9fad0b9767b0561571" id="r_a3156c6fa263cbf9fad0b9767b0561571"><td class="memItemLeft" align="right" valign="top">static float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3156c6fa263cbf9fad0b9767b0561571">ecg_filt</a> [<a class="el" href="#a25022864dfc8ec428e7128282e57b136">CHUNK</a>]</td></tr>
+<tr class="memdesc:a3156c6fa263cbf9fad0b9767b0561571"><td class="mdescLeft">&#160;</td><td class="mdescRight">Almacenamiento temporal para los datos filtrados.  <br /></td></tr>
+<tr class="separator:a3156c6fa263cbf9fad0b9767b0561571"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2eaaedff6ff1d15d7b5e9dd88de158ee" id="r_a2eaaedff6ff1d15d7b5e9dd88de158ee"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2eaaedff6ff1d15d7b5e9dd88de158ee">limiteTaquicardia</a> = 91</td></tr>
+<tr class="memdesc:a2eaaedff6ff1d15d7b5e9dd88de158ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Límite superior para detección de taquicardia (bpm)  <br /></td></tr>
+<tr class="separator:a2eaaedff6ff1d15d7b5e9dd88de158ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abcfcec2f7d279def2fd17282e38325b9" id="r_abcfcec2f7d279def2fd17282e38325b9"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abcfcec2f7d279def2fd17282e38325b9">limiteBradicardia</a> = 59</td></tr>
+<tr class="memdesc:abcfcec2f7d279def2fd17282e38325b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Límite inferior para detección de bradicardia (bpm)  <br /></td></tr>
+<tr class="separator:abcfcec2f7d279def2fd17282e38325b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<h2 class="groupheader">Documentación de «define»</h2>
+<a id="a6b20d41d6252e9871430c242cb1a56e7" name="a6b20d41d6252e9871430c242cb1a56e7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6b20d41d6252e9871430c242cb1a56e7">&#9670;&#160;</a></span>BUFFER_SIZE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BUFFER_SIZE&#160;&#160;&#160;500</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Tamaño del buffer de datos de ECG. </p>
+
+<p class="definition">Definición en la línea <a class="el" href="_proyecto_final_irina_8c_source.html#l00057">57</a> del archivo <a class="el" href="_proyecto_final_irina_8c_source.html">ProyectoFinalIrina.c</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="_proyecto_final_irina_8c_source.html#l00133">adquirirProcesarECG()</a> y <a class="el" href="_proyecto_final_irina_8c_source.html#l00168">calcularParametrosECG()</a>.</p>
+
+</div>
+</div>
+<a id="a25022864dfc8ec428e7128282e57b136" name="a25022864dfc8ec428e7128282e57b136"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a25022864dfc8ec428e7128282e57b136">&#9670;&#160;</a></span>CHUNK</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CHUNK&#160;&#160;&#160;4</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Número de muestras en cada fragmento (chunk) de señal. </p>
+
+<p class="definition">Definición en la línea <a class="el" href="_proyecto_final_irina_8c_source.html#l00066">66</a> del archivo <a class="el" href="_proyecto_final_irina_8c_source.html">ProyectoFinalIrina.c</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="_proyecto_final_irina_8c_source.html#l00340">app_main()</a> y <a class="el" href="_proyecto_final_irina_8c_source.html#l00273">mostrar()</a>.</p>
+
+</div>
+</div>
+<a id="a3df1b4cad09974bfc68858fad7cdc054" name="a3df1b4cad09974bfc68858fad7cdc054"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3df1b4cad09974bfc68858fad7cdc054">&#9670;&#160;</a></span>CONFIG_BLINK_PERIOD</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CONFIG_BLINK_PERIOD&#160;&#160;&#160;500</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Periodo asociado a BLE (ms) </p>
+
+<p class="definition">Definición en la línea <a class="el" href="_proyecto_final_irina_8c_source.html#l00051">51</a> del archivo <a class="el" href="_proyecto_final_irina_8c_source.html">ProyectoFinalIrina.c</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="_proyecto_final_irina_8c_source.html#l00340">app_main()</a>.</p>
+
+</div>
+</div>
+<a id="ac5018bb87a6705370e7e9637e4a42fbf" name="ac5018bb87a6705370e7e9637e4a42fbf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac5018bb87a6705370e7e9637e4a42fbf">&#9670;&#160;</a></span>CONFIG_PERIOD_DIAGNOSTICO</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CONFIG_PERIOD_DIAGNOSTICO&#160;&#160;&#160;1000</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Periodo para mostrar el diagnóstico (ms) </p>
+
+<p class="definition">Definición en la línea <a class="el" href="_proyecto_final_irina_8c_source.html#l00048">48</a> del archivo <a class="el" href="_proyecto_final_irina_8c_source.html">ProyectoFinalIrina.c</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="_proyecto_final_irina_8c_source.html#l00303">mandarDiagnostico()</a>.</p>
+
+</div>
+</div>
+<a id="a7a3ccd8a43b5c5e8a4d573780da1fd4a" name="a7a3ccd8a43b5c5e8a4d573780da1fd4a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7a3ccd8a43b5c5e8a4d573780da1fd4a">&#9670;&#160;</a></span>LED_BT</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define LED_BT&#160;&#160;&#160;<a class="el" href="group___l_e_d.html#ggab6831a7d06c0a2bc69f9b024f6445a80a11a9adb9054de1fe01d6a6750075f57b">LED_1</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>LED utilizado para la notificación de estado Bluetooth. </p>
+
+<p class="definition">Definición en la línea <a class="el" href="_proyecto_final_irina_8c_source.html#l00054">54</a> del archivo <a class="el" href="_proyecto_final_irina_8c_source.html">ProyectoFinalIrina.c</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="_proyecto_final_irina_8c_source.html#l00340">app_main()</a>.</p>
+
+</div>
+</div>
+<a id="a036ce15eb08f2aaee6d849f89e6e6eb1" name="a036ce15eb08f2aaee6d849f89e6e6eb1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a036ce15eb08f2aaee6d849f89e6e6eb1">&#9670;&#160;</a></span>RETARDO_ECG</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define RETARDO_ECG&#160;&#160;&#160;5000</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retardo en ms para la adquisición de señal de ECG. </p>
+
+<p class="definition">Definición en la línea <a class="el" href="_proyecto_final_irina_8c_source.html#l00063">63</a> del archivo <a class="el" href="_proyecto_final_irina_8c_source.html">ProyectoFinalIrina.c</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="_proyecto_final_irina_8c_source.html#l00340">app_main()</a>.</p>
+
+</div>
+</div>
+<a id="a9401e43a8c86acafb31c8e2709baefa1" name="a9401e43a8c86acafb31c8e2709baefa1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9401e43a8c86acafb31c8e2709baefa1">&#9670;&#160;</a></span>SAMPLE_FREQ</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SAMPLE_FREQ&#160;&#160;&#160;220</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Frecuencia de muestreo en Hz. </p>
+
+<p class="definition">Definición en la línea <a class="el" href="_proyecto_final_irina_8c_source.html#l00060">60</a> del archivo <a class="el" href="_proyecto_final_irina_8c_source.html">ProyectoFinalIrina.c</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="_proyecto_final_irina_8c_source.html#l00340">app_main()</a>.</p>
+
+</div>
+</div>
+<a id="a8ff4a12879297e69a77292c6052452b5" name="a8ff4a12879297e69a77292c6052452b5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8ff4a12879297e69a77292c6052452b5">&#9670;&#160;</a></span>T_SENIAL</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define T_SENIAL&#160;&#160;&#160;4000</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Periodo de señal en ms. </p>
+
+<p class="definition">Definición en la línea <a class="el" href="_proyecto_final_irina_8c_source.html#l00069">69</a> del archivo <a class="el" href="_proyecto_final_irina_8c_source.html">ProyectoFinalIrina.c</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="_proyecto_final_irina_8c_source.html#l00340">app_main()</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Documentación de funciones</h2>
+<a id="adefd8ab335f572aca05eeb0ebda4cfba" name="adefd8ab335f572aca05eeb0ebda4cfba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adefd8ab335f572aca05eeb0ebda4cfba">&#9670;&#160;</a></span>adquirirProcesarECG()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void adquirirProcesarECG </td>
+          <td>(</td>
+          <td class="paramtype">void *</td>          <td class="paramname"><span class="paramname"><em>pvParameter</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Tarea para adquirir y procesar la señal de ECG. </p>
+<dl class="params"><dt>Parámetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pvParameter</td><td>Puntero a parámetros de función (opcional).</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>Lee el valor del canal analógico para obtener datos de ECG y los almacena en el buffer hasta completarlo; luego, activa la tarea de cálculo de parámetros. </p>
+
+<p class="definition">Definición en la línea <a class="el" href="_proyecto_final_irina_8c_source.html#l00133">133</a> del archivo <a class="el" href="_proyecto_final_irina_8c_source.html">ProyectoFinalIrina.c</a>.</p>
+
+<p class="reference">Hace referencia a <a class="el" href="analog__io__mcu_8c_source.html#l00130">AnalogInputReadSingle()</a>, <a class="el" href="_proyecto_final_irina_8c_source.html#l00057">BUFFER_SIZE</a>, <a class="el" href="_proyecto_final_irina_8c_source.html#l00082">calcularParametrosECGTaskHandle</a>, <a class="el" href="analog__io__mcu_8h_source.html#l00032">CH1</a>, <a class="el" href="_proyecto_final_irina_8c_source.html#l00088">datoConversionAD</a>, <a class="el" href="_proyecto_final_irina_8c_source.html#l00073">ecg</a>, <a class="el" href="_proyecto_final_irina_8c_source.html#l00097">PROCESANDO</a>, <a class="el" href="uart__mcu_8h_source.html#l00032">UART_PC</a>, <a class="el" href="uart__mcu_8c_source.html#l00222">UartItoa()</a> y <a class="el" href="uart__mcu_8c_source.html#l00193">UartSendString()</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="_proyecto_final_irina_8c_source.html#l00340">app_main()</a>.</p>
+
+</div>
+</div>
+<a id="a630544a7f0a2cc40d8a7fefab7e2fe70" name="a630544a7f0a2cc40d8a7fefab7e2fe70"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a630544a7f0a2cc40d8a7fefab7e2fe70">&#9670;&#160;</a></span>app_main()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void app_main </td>
+          <td>(</td>
+          <td class="paramtype">void</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Función principal del programa. Configura y ejecuta las tareas de adquisición de ECG y comunicación BLE. </p>
+<p>Inicializa la configuración de BLE, temporizadores y tareas para la obtención de datos de ECG, cálculo de parámetros y diagnóstico. </p>
+
+<p class="definition">Definición en la línea <a class="el" href="_proyecto_final_irina_8c_source.html#l00340">340</a> del archivo <a class="el" href="_proyecto_final_irina_8c_source.html">ProyectoFinalIrina.c</a>.</p>
+
+<p class="reference">Hace referencia a <a class="el" href="analog__io__mcu_8h_source.html#l00038">ADC_SINGLE</a>, <a class="el" href="_proyecto_final_irina_8c_source.html#l00133">adquirirProcesarECG()</a>, <a class="el" href="_proyecto_final_irina_8c_source.html#l00079">adquirirProcesarECGTaskHandle</a>, <a class="el" href="analog__io__mcu_8c_source.html#l00045">AnalogInputInit()</a>, <a class="el" href="analog__io__mcu_8c_source.html#l00120">AnalogOutputInit()</a>, <a class="el" href="ble__hid__mcu_8h_source.html#l00039">BLE_CONNECTED</a>, <a class="el" href="ble__hid__mcu_8h_source.html#l00038">BLE_DISCONNECTED</a>, <a class="el" href="ble__hid__mcu_8h_source.html#l00037">BLE_OFF</a>, <a class="el" href="ble__mcu_8c_source.html#l00452">BleInit()</a>, <a class="el" href="ble__mcu_8c_source.html#l00530">BleStatus()</a>, <a class="el" href="_proyecto_final_irina_8c_source.html#l00168">calcularParametrosECG()</a>, <a class="el" href="_proyecto_final_irina_8c_source.html#l00082">calcularParametrosECGTaskHandle</a>, <a class="el" href="analog__io__mcu_8h_source.html#l00032">CH1</a>, <a class="el" href="_proyecto_final_irina_8c_source.html#l00066">CHUNK</a>, <a class="el" href="_proyecto_final_irina_8c_source.html#l00051">CONFIG_BLINK_PERIOD</a>, <a class="el" href="_proyecto_final_irina_8c_source.html#l00124">funcTimerECG()</a>, <a class="el" href="_proyecto_final_irina_8c_source.html#l00247">FuncTimerSenial()</a>, <a class="el" href="analog__io__mcu_8h_source.html#l00049">analog_input_config_t::input</a>, <a class="el" href="_proyecto_final_irina_8c_source.html#l00054">LED_BT</a>, <a class="el" href="led_8c_source.html#l00065">LedOff()</a>, <a class="el" href="led_8c_source.html#l00046">LedOn()</a>, <a class="el" href="led_8c_source.html#l00031">LedsInit()</a>, <a class="el" href="led_8c_source.html#l00084">LedToggle()</a>, <a class="el" href="_proyecto_final_irina_8c_source.html#l00303">mandarDiagnostico()</a>, <a class="el" href="_proyecto_final_irina_8c_source.html#l00085">mandarDiagnosticoTaskHandle</a>, <a class="el" href="_proyecto_final_irina_8c_source.html#l00273">mostrar()</a>, <a class="el" href="_proyecto_final_irina_8c_source.html#l00076">mostrarTaskHandle</a>, <a class="el" href="ili9341_8c_source.html#l00019">NULL</a>, <a class="el" href="uart__mcu_8h_source.html#l00039">serial_config_t::port</a>, <a class="el" href="_proyecto_final_irina_8c_source.html#l00257">read_data()</a>, <a class="el" href="_proyecto_final_irina_8c_source.html#l00063">RETARDO_ECG</a>, <a class="el" href="_proyecto_final_irina_8c_source.html#l00060">SAMPLE_FREQ</a>, <a class="el" href="_proyecto_final_irina_8c_source.html#l00069">T_SENIAL</a>, <a class="el" href="timer__mcu_8h_source.html#l00040">timer_config_t::timer</a>, <a class="el" href="timer__mcu_8h_source.html#l00032">TIMER_A</a>, <a class="el" href="timer__mcu_8h_source.html#l00033">TIMER_B</a>, <a class="el" href="timer__mcu_8c_source.html#l00067">TimerInit()</a>, <a class="el" href="timer__mcu_8c_source.html#l00116">TimerStart()</a>, <a class="el" href="uart__mcu_8h_source.html#l00032">UART_PC</a> y <a class="el" href="uart__mcu_8c_source.html#l00107">UartInit()</a>.</p>
+
+</div>
+</div>
+<a id="ad92215f53851e2f8fda02582c88d058c" name="ad92215f53851e2f8fda02582c88d058c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad92215f53851e2f8fda02582c88d058c">&#9670;&#160;</a></span>calcularParametrosECG()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void calcularParametrosECG </td>
+          <td>(</td>
+          <td class="paramtype">void *</td>          <td class="paramname"><span class="paramname"><em>pvParameter</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Tarea para calcular los parámetros de ECG, como la frecuencia cardíaca y la detección de arritmias. </p>
+<dl class="params"><dt>Parámetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pvParameter</td><td>Puntero a parámetros de función (opcional).</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>Procesa el buffer de ECG para contar complejos QRS y calcular la frecuencia cardíaca, indicando taquicardia, bradicardia o ritmo normal según los valores obtenidos. </p>
+
+<p class="definition">Definición en la línea <a class="el" href="_proyecto_final_irina_8c_source.html#l00168">168</a> del archivo <a class="el" href="_proyecto_final_irina_8c_source.html">ProyectoFinalIrina.c</a>.</p>
+
+<p class="reference">Hace referencia a <a class="el" href="_proyecto_final_irina_8c_source.html#l00091">BRADICARDIA</a>, <a class="el" href="_proyecto_final_irina_8c_source.html#l00057">BUFFER_SIZE</a>, <a class="el" href="_proyecto_final_irina_8c_source.html#l00073">ecg</a>, <a class="el" href="_proyecto_final_irina_8c_source.html#l00100">FRECUENCIA_NORMAL</a>, <a class="el" href="_proyecto_final_irina_8c_source.html#l00106">frecuenciaCardiaca</a>, <a class="el" href="_proyecto_final_irina_8c_source.html#l00115">limiteBradicardia</a>, <a class="el" href="_proyecto_final_irina_8c_source.html#l00112">limiteTaquicardia</a>, <a class="el" href="_proyecto_final_irina_8c_source.html#l00097">PROCESANDO</a> y <a class="el" href="_proyecto_final_irina_8c_source.html#l00094">TAQUICARDIA</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="_proyecto_final_irina_8c_source.html#l00340">app_main()</a>.</p>
+
+</div>
+</div>
+<a id="aecf11fee4eb3578979c57e1476cd0c4c" name="aecf11fee4eb3578979c57e1476cd0c4c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aecf11fee4eb3578979c57e1476cd0c4c">&#9670;&#160;</a></span>funcTimerECG()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void funcTimerECG </td>
+          <td>(</td>
+          <td class="paramtype">void *</td>          <td class="paramname"><span class="paramname"><em>param</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Función de temporización para la adquisición de datos de ECG. </p>
+<dl class="params"><dt>Parámetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">param</td><td>Puntero a parámetros de función (opcional).</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>Activa la tarea de adquisición de datos ECG cada vez que se cumple el temporizador. </p>
+
+<p class="definition">Definición en la línea <a class="el" href="_proyecto_final_irina_8c_source.html#l00124">124</a> del archivo <a class="el" href="_proyecto_final_irina_8c_source.html">ProyectoFinalIrina.c</a>.</p>
+
+<p class="reference">Hace referencia a <a class="el" href="_proyecto_final_irina_8c_source.html#l00079">adquirirProcesarECGTaskHandle</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="_proyecto_final_irina_8c_source.html#l00340">app_main()</a>.</p>
+
+</div>
+</div>
+<a id="a7abd1c0b0bdd5a062b3a36bf63dd2e9b" name="a7abd1c0b0bdd5a062b3a36bf63dd2e9b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7abd1c0b0bdd5a062b3a36bf63dd2e9b">&#9670;&#160;</a></span>FuncTimerSenial()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void FuncTimerSenial </td>
+          <td>(</td>
+          <td class="paramtype">void *</td>          <td class="paramname"><span class="paramname"><em>param</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Función de temporización para la mostrar de datos de ECG. </p>
+<dl class="params"><dt>Parámetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">param</td><td>Puntero a parámetros de función (opcional).</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>Activa la tarea de mostrar datos cada vez que se cumple el temporizador. </p>
+
+<p class="definition">Definición en la línea <a class="el" href="_proyecto_final_irina_8c_source.html#l00247">247</a> del archivo <a class="el" href="_proyecto_final_irina_8c_source.html">ProyectoFinalIrina.c</a>.</p>
+
+<p class="reference">Hace referencia a <a class="el" href="_proyecto_final_irina_8c_source.html#l00076">mostrarTaskHandle</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="_proyecto_final_irina_8c_source.html#l00340">app_main()</a>.</p>
+
+</div>
+</div>
+<a id="a3a3c533b2d5db8d0023f6457d521814e" name="a3a3c533b2d5db8d0023f6457d521814e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3a3c533b2d5db8d0023f6457d521814e">&#9670;&#160;</a></span>mandarDiagnostico()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void mandarDiagnostico </td>
+          <td>(</td>
+          <td class="paramtype">void *</td>          <td class="paramname"><span class="paramname"><em>pvParameter</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Tarea para el envío de diagnóstico basado en la frecuencia cardíaca calculada. </p>
+<dl class="params"><dt>Parámetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pvParameter</td><td>Puntero a parámetros de función (opcional).</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>Envía el diagnóstico de taquicardia, bradicardia o frecuencia normal según la frecuencia cardíaca detectada. </p>
+
+<p class="definition">Definición en la línea <a class="el" href="_proyecto_final_irina_8c_source.html#l00303">303</a> del archivo <a class="el" href="_proyecto_final_irina_8c_source.html">ProyectoFinalIrina.c</a>.</p>
+
+<p class="reference">Hace referencia a <a class="el" href="ble__mcu_8c_source.html#l00544">BleSendString()</a>, <a class="el" href="_proyecto_final_irina_8c_source.html#l00091">BRADICARDIA</a>, <a class="el" href="_proyecto_final_irina_8c_source.html#l00048">CONFIG_PERIOD_DIAGNOSTICO</a>, <a class="el" href="_proyecto_final_irina_8c_source.html#l00100">FRECUENCIA_NORMAL</a>, <a class="el" href="_proyecto_final_irina_8c_source.html#l00106">frecuenciaCardiaca</a> y <a class="el" href="_proyecto_final_irina_8c_source.html#l00094">TAQUICARDIA</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="_proyecto_final_irina_8c_source.html#l00340">app_main()</a>.</p>
+
+</div>
+</div>
+<a id="a2466d768bd6408ec0b68598a9628806d" name="a2466d768bd6408ec0b68598a9628806d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2466d768bd6408ec0b68598a9628806d">&#9670;&#160;</a></span>mostrar()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void mostrar </td>
+          <td>(</td>
+          <td class="paramtype">void *</td>          <td class="paramname"><span class="paramname"><em>pvParameter</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Tarea para el procesamiento y envío de datos de ECG a través de BLE. </p>
+<dl class="params"><dt>Parámetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pvParameter</td><td>Puntero a parámetros de función (opcional).</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>Procesa los datos de ECG con filtros pasa bajo y pasa alto y los envía mediante BLE en segmentos para visualización. </p>
+
+<p class="definition">Definición en la línea <a class="el" href="_proyecto_final_irina_8c_source.html#l00273">273</a> del archivo <a class="el" href="_proyecto_final_irina_8c_source.html">ProyectoFinalIrina.c</a>.</p>
+
+<p class="reference">Hace referencia a <a class="el" href="ble__mcu_8c_source.html#l00544">BleSendString()</a>, <a class="el" href="_proyecto_final_irina_8c_source.html#l00066">CHUNK</a>, <a class="el" href="_proyecto_final_irina_8c_source.html#l00073">ecg</a>, <a class="el" href="_proyecto_final_irina_8c_source.html#l00109">ecg_filt</a> y <a class="el" href="_proyecto_final_irina_8c_source.html#l00103">filter</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="_proyecto_final_irina_8c_source.html#l00340">app_main()</a>.</p>
+
+</div>
+</div>
+<a id="ab56e1ff0f71e003f2e08c6ec294528b1" name="ab56e1ff0f71e003f2e08c6ec294528b1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab56e1ff0f71e003f2e08c6ec294528b1">&#9670;&#160;</a></span>read_data()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void read_data </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t *</td>          <td class="paramname"><span class="paramname"><em>data</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t</td>          <td class="paramname"><span class="paramname"><em>length</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Función ejecutada ante una interrupción de recepción de datos por BLE. </p>
+<dl class="params"><dt>Parámetros</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">data</td><td>Puntero a los datos recibidos. </td></tr>
+    <tr><td class="paramname">length</td><td>Longitud del array de datos recibidos.</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>Activa o desactiva el filtro de señal de acuerdo con los datos recibidos. </p>
+
+<p class="definition">Definición en la línea <a class="el" href="_proyecto_final_irina_8c_source.html#l00257">257</a> del archivo <a class="el" href="_proyecto_final_irina_8c_source.html">ProyectoFinalIrina.c</a>.</p>
+
+<p class="reference">Hace referencia a <a class="el" href="_proyecto_final_irina_8c_source.html#l00103">filter</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="_proyecto_final_irina_8c_source.html#l00340">app_main()</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Documentación de variables</h2>
+<a id="a665a0cca79c6df3fae1097666172ec1e" name="a665a0cca79c6df3fae1097666172ec1e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a665a0cca79c6df3fae1097666172ec1e">&#9670;&#160;</a></span>adquirirProcesarECGTaskHandle</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">TaskHandle_t adquirirProcesarECGTaskHandle = <a class="el" href="ili9341_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Maneja la tarea de adquisición y procesamiento de ECG. </p>
+
+<p class="definition">Definición en la línea <a class="el" href="_proyecto_final_irina_8c_source.html#l00079">79</a> del archivo <a class="el" href="_proyecto_final_irina_8c_source.html">ProyectoFinalIrina.c</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="_proyecto_final_irina_8c_source.html#l00340">app_main()</a> y <a class="el" href="_proyecto_final_irina_8c_source.html#l00124">funcTimerECG()</a>.</p>
+
+</div>
+</div>
+<a id="a492f46518b9451620d1a7253913d5f9d" name="a492f46518b9451620d1a7253913d5f9d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a492f46518b9451620d1a7253913d5f9d">&#9670;&#160;</a></span>BRADICARDIA</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool BRADICARDIA = false</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Indicador de detección de bradicardia. </p>
+
+<p class="definition">Definición en la línea <a class="el" href="_proyecto_final_irina_8c_source.html#l00091">91</a> del archivo <a class="el" href="_proyecto_final_irina_8c_source.html">ProyectoFinalIrina.c</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="_proyecto_final_irina_8c_source.html#l00168">calcularParametrosECG()</a> y <a class="el" href="_proyecto_final_irina_8c_source.html#l00303">mandarDiagnostico()</a>.</p>
+
+</div>
+</div>
+<a id="ad424c02af299f2437d68b8e86e603c16" name="ad424c02af299f2437d68b8e86e603c16"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad424c02af299f2437d68b8e86e603c16">&#9670;&#160;</a></span>calcularParametrosECGTaskHandle</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">TaskHandle_t calcularParametrosECGTaskHandle = <a class="el" href="ili9341_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Maneja la tarea de cálculo de parámetros ECG. </p>
+
+<p class="definition">Definición en la línea <a class="el" href="_proyecto_final_irina_8c_source.html#l00082">82</a> del archivo <a class="el" href="_proyecto_final_irina_8c_source.html">ProyectoFinalIrina.c</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="_proyecto_final_irina_8c_source.html#l00133">adquirirProcesarECG()</a> y <a class="el" href="_proyecto_final_irina_8c_source.html#l00340">app_main()</a>.</p>
+
+</div>
+</div>
+<a id="afd8cf86071a8670bee2c5405054f721f" name="afd8cf86071a8670bee2c5405054f721f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afd8cf86071a8670bee2c5405054f721f">&#9670;&#160;</a></span>datoConversionAD</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint16_t datoConversionAD</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Dato de conversión del canal analógico. </p>
+
+<p class="definition">Definición en la línea <a class="el" href="_proyecto_final_irina_8c_source.html#l00088">88</a> del archivo <a class="el" href="_proyecto_final_irina_8c_source.html">ProyectoFinalIrina.c</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="_proyecto_final_irina_8c_source.html#l00133">adquirirProcesarECG()</a>.</p>
+
+</div>
+</div>
+<a id="af172c585be9d45228fa69274a532fbc0" name="af172c585be9d45228fa69274a532fbc0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af172c585be9d45228fa69274a532fbc0">&#9670;&#160;</a></span>ecg</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float ecg[<a class="el" href="#a6b20d41d6252e9871430c242cb1a56e7">BUFFER_SIZE</a>]</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Buffer para almacenar los datos de ECG. </p>
+
+<p class="definition">Definición en la línea <a class="el" href="_proyecto_final_irina_8c_source.html#l00073">73</a> del archivo <a class="el" href="_proyecto_final_irina_8c_source.html">ProyectoFinalIrina.c</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="_proyecto_final_irina_8c_source.html#l00133">adquirirProcesarECG()</a>, <a class="el" href="_proyecto_final_irina_8c_source.html#l00168">calcularParametrosECG()</a> y <a class="el" href="_proyecto_final_irina_8c_source.html#l00273">mostrar()</a>.</p>
+
+</div>
+</div>
+<a id="a3156c6fa263cbf9fad0b9767b0561571" name="a3156c6fa263cbf9fad0b9767b0561571"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3156c6fa263cbf9fad0b9767b0561571">&#9670;&#160;</a></span>ecg_filt</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">float ecg_filt[<a class="el" href="#a25022864dfc8ec428e7128282e57b136">CHUNK</a>]</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Almacenamiento temporal para los datos filtrados. </p>
+
+<p class="definition">Definición en la línea <a class="el" href="_proyecto_final_irina_8c_source.html#l00109">109</a> del archivo <a class="el" href="_proyecto_final_irina_8c_source.html">ProyectoFinalIrina.c</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="_proyecto_final_irina_8c_source.html#l00273">mostrar()</a>.</p>
+
+</div>
+</div>
+<a id="a5b85fc472953eac39c2629b1f5d68617" name="a5b85fc472953eac39c2629b1f5d68617"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5b85fc472953eac39c2629b1f5d68617">&#9670;&#160;</a></span>filter</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool filter = false</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Indicador de filtro activado. </p>
+
+<p class="definition">Definición en la línea <a class="el" href="_proyecto_final_irina_8c_source.html#l00103">103</a> del archivo <a class="el" href="_proyecto_final_irina_8c_source.html">ProyectoFinalIrina.c</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="gpio__mcu_8c_source.html#l00119">GPIOInputFilter()</a>, <a class="el" href="_proyecto_final_irina_8c_source.html#l00273">mostrar()</a> y <a class="el" href="_proyecto_final_irina_8c_source.html#l00257">read_data()</a>.</p>
+
+</div>
+</div>
+<a id="a5d31bd6916ffd9f6c500178353e2b583" name="a5d31bd6916ffd9f6c500178353e2b583"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5d31bd6916ffd9f6c500178353e2b583">&#9670;&#160;</a></span>FRECUENCIA_NORMAL</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool FRECUENCIA_NORMAL = false</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Indicador de frecuencia cardíaca normal. </p>
+
+<p class="definition">Definición en la línea <a class="el" href="_proyecto_final_irina_8c_source.html#l00100">100</a> del archivo <a class="el" href="_proyecto_final_irina_8c_source.html">ProyectoFinalIrina.c</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="_proyecto_final_irina_8c_source.html#l00168">calcularParametrosECG()</a> y <a class="el" href="_proyecto_final_irina_8c_source.html#l00303">mandarDiagnostico()</a>.</p>
+
+</div>
+</div>
+<a id="a22b2de8318a9d8f8ea4ece14678f5c17" name="a22b2de8318a9d8f8ea4ece14678f5c17"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a22b2de8318a9d8f8ea4ece14678f5c17">&#9670;&#160;</a></span>frecuenciaCardiaca</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float frecuenciaCardiaca</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Variable para almacenar la frecuencia cardíaca calculada. </p>
+
+<p class="definition">Definición en la línea <a class="el" href="_proyecto_final_irina_8c_source.html#l00106">106</a> del archivo <a class="el" href="_proyecto_final_irina_8c_source.html">ProyectoFinalIrina.c</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="_proyecto_final_irina_8c_source.html#l00168">calcularParametrosECG()</a> y <a class="el" href="_proyecto_final_irina_8c_source.html#l00303">mandarDiagnostico()</a>.</p>
+
+</div>
+</div>
+<a id="abcfcec2f7d279def2fd17282e38325b9" name="abcfcec2f7d279def2fd17282e38325b9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abcfcec2f7d279def2fd17282e38325b9">&#9670;&#160;</a></span>limiteBradicardia</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t limiteBradicardia = 59</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Límite inferior para detección de bradicardia (bpm) </p>
+
+<p class="definition">Definición en la línea <a class="el" href="_proyecto_final_irina_8c_source.html#l00115">115</a> del archivo <a class="el" href="_proyecto_final_irina_8c_source.html">ProyectoFinalIrina.c</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="_proyecto_final_irina_8c_source.html#l00168">calcularParametrosECG()</a>.</p>
+
+</div>
+</div>
+<a id="a2eaaedff6ff1d15d7b5e9dd88de158ee" name="a2eaaedff6ff1d15d7b5e9dd88de158ee"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2eaaedff6ff1d15d7b5e9dd88de158ee">&#9670;&#160;</a></span>limiteTaquicardia</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t limiteTaquicardia = 91</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Límite superior para detección de taquicardia (bpm) </p>
+
+<p class="definition">Definición en la línea <a class="el" href="_proyecto_final_irina_8c_source.html#l00112">112</a> del archivo <a class="el" href="_proyecto_final_irina_8c_source.html">ProyectoFinalIrina.c</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="_proyecto_final_irina_8c_source.html#l00168">calcularParametrosECG()</a>.</p>
+
+</div>
+</div>
+<a id="a06ac3c585939e725afd65a50ac971dc1" name="a06ac3c585939e725afd65a50ac971dc1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a06ac3c585939e725afd65a50ac971dc1">&#9670;&#160;</a></span>mandarDiagnosticoTaskHandle</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">TaskHandle_t mandarDiagnosticoTaskHandle = <a class="el" href="ili9341_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Maneja la tarea de diagnóstico. </p>
+
+<p class="definition">Definición en la línea <a class="el" href="_proyecto_final_irina_8c_source.html#l00085">85</a> del archivo <a class="el" href="_proyecto_final_irina_8c_source.html">ProyectoFinalIrina.c</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="_proyecto_final_irina_8c_source.html#l00340">app_main()</a>.</p>
+
+</div>
+</div>
+<a id="abfd4b9c8a63421915a00cac5c5ca13cb" name="abfd4b9c8a63421915a00cac5c5ca13cb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abfd4b9c8a63421915a00cac5c5ca13cb">&#9670;&#160;</a></span>mostrarTaskHandle</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">TaskHandle_t mostrarTaskHandle = <a class="el" href="ili9341_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Maneja la tarea de visualización de datos. </p>
+
+<p class="definition">Definición en la línea <a class="el" href="_proyecto_final_irina_8c_source.html#l00076">76</a> del archivo <a class="el" href="_proyecto_final_irina_8c_source.html">ProyectoFinalIrina.c</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="_proyecto_final_irina_8c_source.html#l00340">app_main()</a> y <a class="el" href="_proyecto_final_irina_8c_source.html#l00247">FuncTimerSenial()</a>.</p>
+
+</div>
+</div>
+<a id="a82610f68a9f7e81327516179689ae9b4" name="a82610f68a9f7e81327516179689ae9b4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a82610f68a9f7e81327516179689ae9b4">&#9670;&#160;</a></span>PROCESANDO</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool PROCESANDO = false</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Indicador de procesamiento en curso. </p>
+
+<p class="definition">Definición en la línea <a class="el" href="_proyecto_final_irina_8c_source.html#l00097">97</a> del archivo <a class="el" href="_proyecto_final_irina_8c_source.html">ProyectoFinalIrina.c</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="_proyecto_final_irina_8c_source.html#l00133">adquirirProcesarECG()</a> y <a class="el" href="_proyecto_final_irina_8c_source.html#l00168">calcularParametrosECG()</a>.</p>
+
+</div>
+</div>
+<a id="ae97a0a07d4eb02b60e57cc77632b4796" name="ae97a0a07d4eb02b60e57cc77632b4796"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae97a0a07d4eb02b60e57cc77632b4796">&#9670;&#160;</a></span>TAQUICARDIA</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool TAQUICARDIA = false</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Indicador de detección de taquicardia. </p>
+
+<p class="definition">Definición en la línea <a class="el" href="_proyecto_final_irina_8c_source.html#l00094">94</a> del archivo <a class="el" href="_proyecto_final_irina_8c_source.html">ProyectoFinalIrina.c</a>.</p>
+
+<p class="reference">Referenciado por <a class="el" href="_proyecto_final_irina_8c_source.html#l00168">calcularParametrosECG()</a> y <a class="el" href="_proyecto_final_irina_8c_source.html#l00303">mandarDiagnostico()</a>.</p>
+
+</div>
+</div>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_b84a8f710efbce87608746a3caad197b.html">ProyectoFinalEP</a></li><li class="navelem"><a class="el" href="dir_cdebd6c163ab2e3eacbb8dded61e2a02.html">GiorgiLauritto_2C_2024</a></li><li class="navelem"><a class="el" href="dir_d6841aa984a86515fabebf538581fa9d.html">firmware</a></li><li class="navelem"><a class="el" href="dir_3423f8ef498f2dba84e6519e0b2dcdff.html">examples</a></li><li class="navelem"><a class="el" href="dir_f736b33e6cad7c551726fcd456e0a05b.html">ProyectoFinalIrina</a></li><li class="navelem"><a class="el" href="dir_f7c9ec801ada76fafecd94f6ae2630da.html">main</a></li><li class="navelem"><a class="el" href="_proyecto_final_irina_8c.html">ProyectoFinalIrina.c</a></li>
+    <li class="footer">Generado por <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.11.0 </li>
+  </ul>
+</div>
+</body>
+</html>

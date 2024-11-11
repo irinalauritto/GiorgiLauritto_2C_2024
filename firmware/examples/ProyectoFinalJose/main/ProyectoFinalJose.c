@@ -1,25 +1,32 @@
-/*! @mainpage Blinking
+/*! @mainpage Proyecto Final Integrador - Oximetría de Pulso
  *
- * \section genDesc General Description
+ * @section genDesc General Description
  *
- * This section describes how the program works.
+ * En este proyecto se encuentra una parte del proyecto final presentado en la cátedra de Electronica Programable por las alumnas Josefina Giorgi e Irina Lauritto.
+ * Este código adquiere datos de la oximetría de pulso y envía parámetros como la frecuencia cardíaca y la saturación de oxígeno en sangre, a través de BLE para su visualización en una aplicación móvil.
  *
- * <a href="https://drive.google.com/...">Operation Example</a>
+ * * 
  *
  * \section hardConn Hardware Connection
  *
- * |   LED		    |   ESP32   	|
+ * |    ODP Módulo  |   EDU-ESP  	|
  * |:--------------:|:--------------|
- * | 	PIN1	 	| 	GPIO3		|
+ * | 	SCL	 	    | 	SCL	    	|
+ * | 	SDA 	    | 	SDA		    |
+ * | 	GND	 	    | 	GND		    |
+ * | 	+3V	 	    | 	+3V	        |
+ * | 	EN	 	    | 	+3V	    	|
+ * | 	INT	 	    | 	GPIO_1		|
  *
  *
  * @section changelog Changelog
  *
  * |   Date	    | Description                                    |
  * |:----------:|:-----------------------------------------------|
- * | 12/09/2023 | Document creation		                         |
+ * | 11/11/2024 | Entrega del proyecto Final Integrador.         |
  *
- * @author Albano Peñalva (albano.penalva@uner.edu.ar)
+ * @author Josefina Giorgi (josefina.giorgi@ingenieria.uner.edu.ar) 
+ * @author Irina Lauritto (irina.lauritto@ingenieria.uner.edu.ar)
  *
  */
 
@@ -39,27 +46,43 @@
 #include "timer_mcu.h"
 #include "string.h"
 /*==================[macros and definitions]=================================*/
+/** @brief Periodo de parpadeo del LED en milisegundos. */
 #define CONFIG_BLINK_PERIOD 500
-#define LED_BT	            LED_1
-#define RETARDO_ODP 50 
-#define RETARDO_MOSTRAR     1000
-#define CHUNK               8
-#define T_SENIAL            8000 
+
+/** @brief LED utilizado para indicar el estado de Bluetooth. */
+#define LED_BT LED_1
+
+/** @brief Retardo en milisegundos para la adquisición de datos de oximetría de pulso. */
+#define RETARDO_ODP 50
+
+/** @brief Retardo en milisegundos para mostrar los datos en pantalla. */
+#define RETARDO_MOSTRAR 1000
+
 /*==================[internal data definition]===============================*/
-TaskHandle_t adquirirODP_task_handle= NULL;
+/** @brief Handle de la tarea para adquirir datos de oximetría de pulso. */
+TaskHandle_t adquirirODP_task_handle = NULL;
+
+/** @brief Handle de la tarea para procesar eventos de frecuencia cardíaca. */
 TaskHandle_t hrm_process_event_handle = NULL;
+
+/** @brief Handle de la tarea para mostrar los datos en pantalla. */
 TaskHandle_t mostrarTaskHandle = NULL;
 
+/** @brief Indicador de si se deben enviar los datos a través de BLE. */
 bool ENVIAR_DATA = false;
+
+/** @brief Saturación de oxígeno en sangre medida por el dispositivo. */
 uint16_t saturacionOxigeno;
+
+/** @brief Frecuencia cardíaca medida por el dispositivo. */
 float frecuenciaCardiaca;
+
 /*==================[internal functions declaration]=========================*/
 
 /**
- * @brief This function is the ISR for the GPIO interrupt
+ * @brief Interrupción para el GPIO
  *
- * When the interrupt is triggered, it notifies the hrm_process_event_task
- * to run.
+ * Cambia el estado del LED_3 y notifica a la tarea `hrm_process_event_task`.
  */
 void pint_intr_callback(void)
 {
@@ -69,10 +92,10 @@ void pint_intr_callback(void)
 	vTaskNotifyGiveFromISR(hrm_process_event_handle, pdFALSE);
 }
 
-
-
 /**
- * @brief HRM process event task
+ * @brief Tarea para procesar eventos de frecuencia cardíaca.
+ *
+ * Espera a recibir notificaciones para procesar eventos de oximetría de pulso.
  */
 static void hrm_process_event_task(void *pvParameter){
     while(true){
@@ -81,10 +104,9 @@ static void hrm_process_event_task(void *pvParameter){
     }
 }
 
- /**
- * @brief Función a ejecutarse ante un interrupción de recepción 
- * a través de la conexión BLE.
- * 
+/**
+ * @brief Función ejecutada ante una interrupción de recepción por BLE.
+ *
  * @param data      Puntero a array de datos recibidos
  * @param length    Longitud del array de datos recibidos
  */
@@ -98,25 +120,29 @@ void read_data(uint8_t * data, uint8_t length){
             break;
     }
 }
+
+/**
+ * @brief Tarea para adquirir datos de oximetría de pulso.
+ *
+ * Alterna el estado de LED_1, adquiere la saturación de oxígeno y la frecuencia cardíaca.
+ */
 static void adquirirODP(void *pvParameter) {
  	while(true){
 		hrm_loop();
 		LedToggle(LED_1);
 		vTaskDelay(RETARDO_ODP / portTICK_PERIOD_MS);	
-		//LcdItsE0803Write(hrm_get_heart_rate());
 		saturacionOxigeno = hrm_get_spo2();
         frecuenciaCardiaca = hrm_get_heart_rate();
     }
 }
 
-//void FuncTimerSenial(void *param)
-//{
- //   xTaskNotifyGive(mostrarTaskHandle);
-//}
-
+/**
+ * @brief Tarea para mostrar los datos de oximetría de pulso en pantalla.
+ *
+ * Envía la saturación de oxígeno y la frecuencia cardíaca a través de BLE cuando ENVIAR_DATA es verdadero.
+ */
 static void mostrar(void *pvParameter)
 {
-	
     while(1)
     {
         char msgSaturacion[128];
@@ -145,22 +171,18 @@ static void mostrar(void *pvParameter)
 }
 
 /*==================[external functions definition]==========================*/
+/**
+ * @brief Función principal de la aplicación.
+ *
+ * Inicializa el BLE y las tareas para manejar el dispositivo de oximetría.
+ */
 void app_main(void){
 	ble_config_t ble_configuration = {
         "ESP_EDU_IRI_JOSE_OXIMETRIA",
         read_data
     };
     
-    /*timer_config_t timer_senial = {
-        .timer = TIMER_B,
-        .period = T_SENIAL*CHUNK,
-        .func_p = FuncTimerSenial,
-        .param_p = NULL
-    };*/
-
-    //TimerInit(&timer_senial);
     LedsInit();
-	//LcdItsE0803Init();
 	GPIOInit(GPIO_1, GPIO_INPUT);
 	GPIOActivInt(GPIO_1, pint_intr_callback, 0, NULL);
 	printf("Init MAXM86161 test.\r\n");
@@ -169,7 +191,6 @@ void app_main(void){
 
 	BleInit(&ble_configuration);
 
-  
 
 	hrm_init_app();
     hrm_process_event(BTN0_IRQ_EVENT); /* Start the device's autonomous measurement operation. */
@@ -178,8 +199,6 @@ void app_main(void){
     xTaskCreate(&hrm_process_event_task, "HRM PROCESS", 4096, NULL, 5, &hrm_process_event_handle);	
 	xTaskCreate(&adquirirODP, "Adquirir ODP", 4096, NULL, 5, &adquirirODP_task_handle);
 	xTaskCreate(&mostrar, "mostrar", 2048, NULL, 5, &mostrarTaskHandle);
-
-	//TimerStart(timer_senial.timer);
 
 
     while(1){
