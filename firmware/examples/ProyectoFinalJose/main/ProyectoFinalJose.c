@@ -5,7 +5,7 @@
  * En este proyecto se encuentra una parte del proyecto final presentado en la cátedra de Electronica Programable por las alumnas Josefina Giorgi e Irina Lauritto.
  * Este código adquiere datos de la oximetría de pulso y envía parámetros como la frecuencia cardíaca y la saturación de oxígeno en sangre, a través de BLE para su visualización en una aplicación móvil.
  *
- * * 
+ * 
  *
  * \section hardConn Hardware Connection
  *
