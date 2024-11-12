@@ -93,7 +93,7 @@ void pint_intr_callback(void)
 }
 
 /**
- * @brief Tarea para procesar eventos de frecuencia cardíaca.
+ * @brief Tarea para procesar eventos.
  *
  * Espera a recibir notificaciones para procesar eventos de oximetría de pulso.
  */
