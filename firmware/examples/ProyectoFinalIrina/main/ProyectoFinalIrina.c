@@ -20,7 +20,7 @@
  *
  * |   Date	    | Description                                    |
  * |:----------:|:-----------------------------------------------|
- * | 11/11/2024 | Entrega del proyecto Final Integrador	                     |
+ * | 11/11/2024 | Entrega del proyecto Final Integrador	         |
  *
  * @author Josefina Giorgi (josefina.giorgi@ingenieria.uner.edu.ar) 
  * @author Irina Lauritto (irina.lauritto@ingenieria.uner.edu.ar)
@@ -234,7 +234,7 @@ static void calcularParametrosECG(void *pvParameter){
         }
         
         PROCESANDO = false;
-        
+      
     
     }
 }
